@@ -11,7 +11,7 @@ public class Database {
 	}
 	
 	public Table addTable(String tablename, String filename) {
-		Table t = new Table(filename);
+		Table t = new Table(fileDir + "/" + filename);
 		tables.put(tablename, t);
 		return t;
 	}
@@ -21,6 +21,9 @@ public class Database {
 	}
 	
 	public static void main(String[] args) {
-		Table authors = new Table("src/authors.csv");
+		Database d = new Database("database");
+		Table t = d.addTable("Authors", "authors.csv");
+		Record r = new Record(t, 7000);
+		System.out.println(r.getValue(3));
 	}
 }
