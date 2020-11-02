@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PageManager {
-	public static int RECORDS_PER_PAGE = 5000; //We can fix the number of blocks/pages instead of this parameter
+	public static int RECORDS_PER_PAGE = 5000;
 	
 	private Table table;
 	private int totalRecords;
@@ -14,7 +14,7 @@ public class PageManager {
 	public PageManager(Table table) {
 		this.table = table;
 		this.totalRecords = table.getNumRecords();
-		this.numPages = (int) Math.ceil(totalRecords/RECORDS_PER_PAGE);
+		this.numPages = (totalRecords-1)/RECORDS_PER_PAGE + 1;
 		this.pagesOffset = new ArrayList<Integer>();
 		this.pageRecordsLength = new ArrayList<List<Integer>>();
 		computePageLengthOffset();

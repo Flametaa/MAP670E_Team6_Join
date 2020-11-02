@@ -15,7 +15,8 @@ public class Table {
 	private List<Integer> recordsOffset;
 	List<Integer> recordsLength;
 	
-	public Table(String filename) {
+	public Table(String tablename, String filename) {
+		this.tablename = tablename;
 		this.filename = filename;
 		this.recordsOffset = new ArrayList<Integer>();
 		this.recordsLength = new ArrayList<Integer>();

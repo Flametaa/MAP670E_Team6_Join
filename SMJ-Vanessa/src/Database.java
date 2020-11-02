@@ -11,7 +11,7 @@ public class Database {
 	}
 	
 	public Table addTable(String tablename, String filename) {
-		Table t = new Table(fileDir + "/" + filename);
+		Table t = new Table(tablename, fileDir + "/" + filename);
 		tables.put(tablename, t);
 		return t;
 	}
@@ -23,6 +23,8 @@ public class Database {
 	public static void main(String[] args) {
 		Database d = new Database("database");
 		Table t = d.addTable("Authors", "authors.csv");
+		PageManager pm = new PageManager(t);
+		System.out.println(pm.getNumPages());
 		Record r = new Record(t, 7000);
 		System.out.println(r.getValue(3));
 	}
