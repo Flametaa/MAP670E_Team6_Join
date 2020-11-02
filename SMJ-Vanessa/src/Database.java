@@ -25,7 +25,8 @@ public class Database {
 		Table t1 = d.addTable("R1", "mini_purchases_sorted.csv");
 		Table t2 = d.addTable("R2", "mini_clients_sorted.csv");
 		SortMergeJoin j = new SortMergeJoin(t1, t2);
-		j.join();
+		Table joined = j.join("joinedClientsPurchases", "database/joined_clients_purchases.csv");
+		System.out.println("Done Join");
 //		PageManager pm = new PageManager(t2);
 //		SortOperator so1 = new SortOperator(t1);
 //		so1.sort("database/run1");

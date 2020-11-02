@@ -1,41 +1,15 @@
 public class Record {
-	Table table;
-	int row;
-	int length;
-	private int pageNum;
-	private int pageEntryNum;
-	private String[] values;
+	protected String[] values;
+
+	public Record(String[] values) {
+		this.values = values;
+	}
 	
-	public Record(Table table, int row) {
-		this.table = table;
-		this.row = row;
-		this.length = table.getRecordsLength().get(row);
-		this.pageNum = Math.floorDiv(row, PageManager.RECORDS_PER_PAGE);
-		this.pageEntryNum = row % PageManager.RECORDS_PER_PAGE;
-		this.values = table.getRecordValues(row);
+	public String[] getValues() {
+		return values;
 	}
 	
 	public String getValue(int column) {
 		return values[column];
-	}
-
-	public int getRow() {
-		return row;
-	}
-
-	public int getLength() {
-		return length;
-	}
-
-	public int getPageNum() {
-		return pageNum;
-	}
-
-	public int getPageEntryNum() {
-		return pageEntryNum;
-	}
-
-	public String[] getValues() {
-		return values;
 	}
 }

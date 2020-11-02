@@ -14,10 +14,10 @@ public class PageManager {
 		this.numPages = (totalRecords-1)/RECORDS_PER_PAGE + 1;
 	}
 	
-	public List<Record> loadPageToMemory(int p) {
-		List<Record> page = new ArrayList<Record>();
+	public List<TableRecord> loadPageToMemory(int p) {
+		List<TableRecord> page = new ArrayList<TableRecord>();
 		for (int j=0; j < Math.min(RECORDS_PER_PAGE, totalRecords); ++j) {
-			Record r = new Record(table, p*RECORDS_PER_PAGE + j);
+			TableRecord r = new TableRecord(table, p*RECORDS_PER_PAGE + j);
 			page.add(r);
 		}
 		return page;

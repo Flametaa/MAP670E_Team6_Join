@@ -18,28 +18,12 @@ public class DiskManager {
 		}
 	}
 	
-	public static void writeRecordsToDisk(String dir, String filename, List<Record> records) {
+	public static void writeRecordsToDisk(String filename, List<Record> records) {
 		FileWriter fileWriter = null;
 		try {
-			fileWriter = new FileWriter(dir + "/" + filename);
+			fileWriter = new FileWriter(filename);
 			for (Record r : records) {
 				String line = String.join(CSV_SEPARATOR, r.getValues());
-				fileWriter.append(line);
-				fileWriter.append(NEW_LINE_SEPARATOR);
-			}
-			fileWriter.flush();
-			fileWriter.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public static void writeRecords(String dir, String filename, List<String[]> records) {
-		FileWriter fileWriter = null;
-		try {
-			fileWriter = new FileWriter(dir + "/" + filename);
-			for (String[] r : records) {
-				String line = String.join(CSV_SEPARATOR, r);
 				fileWriter.append(line);
 				fileWriter.append(NEW_LINE_SEPARATOR);
 			}

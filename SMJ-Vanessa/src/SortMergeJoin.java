@@ -14,8 +14,8 @@ public class SortMergeJoin {
 	private int LeftPointer;
 	private int markRecord;
 	private int markPage;
-	private List<String[]> joined;
-	private Comparator<Record> comparator;
+	private List<Record> joined;
+	private Comparator<TableRecord> comparator;
 	
 	public SortMergeJoin(Table t1, Table t2) {
 		this.r= t1;
@@ -28,19 +28,19 @@ public class SortMergeJoin {
 		this.LeftPointer=0;
 		this.markRecord=-1;
 		this.markPage=-1;
+		this.joined = new ArrayList<Record>();
 		this.comparator = (r1, r2) -> (r1.getValue(0)).compareTo(r2.getValue(0));
-		this.joined = new ArrayList<String[]>();
 	}
 	
-	public void join() {
+	public Table join(String tablename, String filename) {
 		int right=0;
 		boolean end=false;
 		boolean lock=true;
-		List<Record> PageR= PageManagerR.loadPageToMemory(right);
+		List<TableRecord> PageR= PageManagerR.loadPageToMemory(right);
 		for ( int x=0 ; x<this.PageinL;x++) { // Looping over all the left pages starting from zero
 			this.LeftPointer=0; // in Every left page we start with a left pointer at position zero 
 			lock=true; // lock is used when we need to turn to another Left Page
-			List<Record> PageL= PageManagerL.loadPageToMemory(x);  // Locating the LeftPage
+			List<TableRecord> PageL= PageManagerL.loadPageToMemory(x);  // Locating the LeftPage
 			while(end==false && lock==true) { //Keep running if it's not done , and when left page still have records
 				if(this.markRecord==-1 && this.markPage==-1) {
 					while(comparator.compare(PageL.get(LeftPointer), PageR.get(RightPointer)) < 0 && lock) {
@@ -71,7 +71,8 @@ public class SortMergeJoin {
 					List<String> resultList = new ArrayList<String>(Arrays.asList(PageL.get(LeftPointer).getValues()));
 					resultList.addAll(Arrays.asList(PageR.get(RightPointer).getValues()));
 					String[] result = resultList.toArray(new String[0]);
-					joined.add(result);
+					Record r = new Record(result);
+					joined.add(r);
 					RightPointer++;
 					if(RightPointer > PageR.size()-1) { // same as before 
 						right++;
@@ -102,6 +103,8 @@ public class SortMergeJoin {
 				}
 			}
 		}
-	DiskManager.writeRecords("database", "joined.csv", joined);	
+	DiskManager.writeRecordsToDisk(filename, joined);
+	Table joinedTable = new Table(tablename, filename);
+	return joinedTable;
 	}
 }

@@ -1,6 +1,3 @@
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -14,7 +11,7 @@ public class SortOperator {
 	
 	public SortOperator(Table table) {
 		this.table = table;
-		this.pageManager = new PageManager(table);
+		this.pageManager = new PageManager(this.table);
 		this.comparator = (r1, r2) -> (r1.getValue(0)).compareTo(r2.getValue(0));
 	}
 	
@@ -28,7 +25,7 @@ public class SortOperator {
 			}
 			buffersRecords.sort(comparator);
 			String filename = "run_" + r + ".csv";
-			DiskManager.writeRecordsToDisk(runsDir, filename, buffersRecords);
+			DiskManager.writeRecordsToDisk(runsDir + "/" + filename, buffersRecords);
 		}
 	}
 }
