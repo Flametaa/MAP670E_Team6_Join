@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PageManager {
-	public static int RECORDS_PER_PAGE = 100;
+	public static int RECORDS_PER_PAGE = 2;
 	
 	private Table table;
 	private int totalRecords;

@@ -3,7 +3,7 @@ import java.util.Comparator;
 import java.util.List;
 
 public class SortOperator {
-	public static int NUM_BUFFERS = 5;
+	public static int NUM_BUFFERS = 10;
 	
 	private Table table;
 	private PageManager pageManager;
@@ -20,8 +20,15 @@ public class SortOperator {
 		int runsNum = (pageManager.getNumPages()-1)/NUM_BUFFERS + 1;
 		for (int r=0; r<runsNum; ++r) {
 			List<Record> buffersRecords = new ArrayList<Record>();
-			for (int p=0; p< Math.min(NUM_BUFFERS, pageManager.getNumPages()); ++p) {
-				buffersRecords.addAll(pageManager.loadPageToMemory(r*NUM_BUFFERS + p));
+			if (r==runsNum-1) {
+				int remainingPages = pageManager.getNumPages() - (runsNum-1)*NUM_BUFFERS;
+				for (int p=0; p < remainingPages; ++p) {
+					buffersRecords.addAll(pageManager.loadPageToMemory(r*NUM_BUFFERS + p));
+				}
+			} else {
+				for (int p=0; p < NUM_BUFFERS; ++p) {
+					buffersRecords.addAll(pageManager.loadPageToMemory(r*NUM_BUFFERS + p));
+				}	
 			}
 			buffersRecords.sort(comparator);
 			String filename = "run_" + r + ".csv";
