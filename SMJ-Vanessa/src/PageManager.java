@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PageManager {
-	public static int RECORDS_PER_PAGE = 2000;
+	public static int RECORDS_PER_PAGE = 100;
 	
 	private Table table;
 	private int totalRecords;
@@ -16,9 +16,8 @@ public class PageManager {
 	
 	public List<Record> loadPageToMemory(int p) {
 		List<Record> page = new ArrayList<Record>();
-		for (int j=0; j < RECORDS_PER_PAGE; ++j) {
+		for (int j=0; j < Math.min(RECORDS_PER_PAGE, totalRecords); ++j) {
 			Record r = new Record(table, p*RECORDS_PER_PAGE + j);
-			System.out.println(r.getValue(0));
 			page.add(r);
 		}
 		return page;

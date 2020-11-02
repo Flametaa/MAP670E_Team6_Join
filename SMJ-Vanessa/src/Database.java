@@ -22,10 +22,14 @@ public class Database {
 	
 	public static void main(String[] args) {
 		Database d = new Database("database");
-		Table t = d.addTable("Authors", "authors.csv");
-		PageManager pm = new PageManager(t);
-		System.out.println(pm.getNumPages());
-		Record r = new Record(t, 7000);
-		System.out.println(r.getValue(3));
+		Table t1 = d.addTable("R1", "mini_purchases_sorted.csv");
+		Table t2 = d.addTable("R2", "mini_clients_sorted.csv");
+		SortMergeJoin j = new SortMergeJoin(t1, t2);
+		j.join();
+//		PageManager pm = new PageManager(t2);
+//		SortOperator so1 = new SortOperator(t1);
+//		so1.sort("database/run1");
+//		SortOperator so2 = new SortOperator(t2);
+//		so2.sort("database/run2");
 	}
 }
