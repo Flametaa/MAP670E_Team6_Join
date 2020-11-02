@@ -12,8 +12,7 @@ public class Record {
 		this.length = table.getRecordsLength().get(row);
 		this.pageNum = Math.floorDiv(row, PageManager.RECORDS_PER_PAGE);
 		this.pageEntryNum = row % PageManager.RECORDS_PER_PAGE;
-		String record = table.getRecord(row).replace("\"","");
-		this.values = record.split(Table.CSV_SPLIT_BY);
+		this.values = table.getRecordValues(row);
 	}
 	
 	public String getValue(int column) {

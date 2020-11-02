@@ -1,7 +1,6 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.RandomAccessFile;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,10 +9,10 @@ public class Table {
 	
 	private String tablename;
 	private String filename;
+	private List<Integer> recordsOffset;
+	private List<Integer> recordsLength;
 	private int numFields;
 	private int numRecords;
-	private List<Integer> recordsOffset;
-	List<Integer> recordsLength;
 	
 	public Table(String tablename, String filename) {
 		this.tablename = tablename;
@@ -60,11 +59,7 @@ public class Table {
 		return n;
 	}
 	
-	public int getNumRecords() {
-		return numRecords;
-	}
-	
-	public String getRecord(int i) {
+	public String[] getRecordValues(int i) {
 		byte[] bytes = new byte[(int) recordsLength.get(i)];
 		RandomAccessFile raf;
 		try {
@@ -75,7 +70,9 @@ public class Table {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return new String(bytes);
+		String record = new String(bytes).replace("\"","");
+		String[] values = record.split(CSV_SPLIT_BY);
+		return values;
 	}
 	
 	public String getTablename() {
@@ -86,6 +83,10 @@ public class Table {
 		return filename;
 	}
 
+	public List<Integer> getRecordsOffset() {
+		return recordsOffset;
+	}
+	
 	public List<Integer> getRecordsLength() {
 		return recordsLength;
 	}
@@ -93,8 +94,8 @@ public class Table {
 	public int getNumFields() {
 		return numFields;
 	}
-
-	public List<Integer> getRecordsOffset() {
-		return recordsOffset;
+	
+	public int getNumRecords() {
+		return numRecords;
 	}
 }
