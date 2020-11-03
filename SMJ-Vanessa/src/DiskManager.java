@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.FileWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -48,5 +49,16 @@ public class DiskManager {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public static void deleteDirectory(String dir) {
+		File directoryToBeDeleted = new File(dir);
+	    File[] allContents = directoryToBeDeleted.listFiles();
+	    if (allContents != null) {
+	        for (File file : allContents) {
+	            deleteDirectory(file.getPath());
+	        }
+	    }
+	    directoryToBeDeleted.delete();
 	}
 }
