@@ -45,7 +45,7 @@ public class SortMergeJoin {
 		this.comparator = (r1, r2) -> (r1.getValue(0)).compareTo(r2.getValue(0));
 	}
 	
-	public Table join(String tablename, String filename) {
+	public void join(String filename) {
 		int right=0;
 		boolean end=false;
 		boolean lock=true;
@@ -62,7 +62,7 @@ public class SortMergeJoin {
 							lock=false; // If true we need to move to the next left page thus apply lock so it wont enter another function down
 						}
 					}
-					while(lock && comparator.compare(PageL.get(LeftPointer), PageR.get(RightPointer)) > 0) {
+					while(!end && lock && comparator.compare(PageL.get(LeftPointer), PageR.get(RightPointer)) > 0) {
 						RightPointer++;
 						if(RightPointer > PageR.size()-1) { // we need to check if the rightpointer is bigger than the size of the right page
 							right++; // increment the page
@@ -79,7 +79,7 @@ public class SortMergeJoin {
 						this.markRecord=RightPointer; // set the mark record
 					}
 				}
-				if(lock && comparator.compare(PageL.get(LeftPointer), PageR.get(RightPointer)) == 0) {
+				if(!end && lock && comparator.compare(PageL.get(LeftPointer), PageR.get(RightPointer)) == 0) {
 					// merge both
 					List<String> resultList = new ArrayList<String>(Arrays.asList(PageL.get(LeftPointer).getValues()));
 					resultList.addAll(Arrays.asList(PageR.get(RightPointer).getValues()));
@@ -102,9 +102,10 @@ public class SortMergeJoin {
 				else {
 					if(lock==true) {
 						RightPointer=this.markRecord; // reset the pointers
-						right=this.markPage; // reset the page
-						PageR=PageManagerR.loadPageToMemory(right); // we reload the page we now need 
-						
+						if (right!=this.markPage) { // reset the page
+							right = this.markPage;
+							PageR=PageManagerR.loadPageToMemory(right); // we reload the page we now need 
+						}
 						LeftPointer++;
 						if(LeftPointer > PageL.size()-1) {
 							lock=false;
@@ -116,8 +117,6 @@ public class SortMergeJoin {
 				}
 			}
 		}
-	DiskManager.writeRecordsToDisk(filename, joined);
-	Table joinedTable = new Table(tablename, filename);
-	return joinedTable;
+		DiskManager.writeRecordsToDisk(filename, joined);
 	}
 }

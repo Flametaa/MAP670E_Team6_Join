@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PageManager {
-	public static int RECORDS_PER_PAGE = 1000;
+	public static int RECORDS_PER_PAGE = 40000;
 	
 	private Table table;
 	private int totalRecords;

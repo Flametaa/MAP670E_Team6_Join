@@ -26,7 +26,7 @@ public class Database {
 		Table t2 = d.addTable("purchases_heavy", "purchases_heavy.csv");
 		long startTime = System.currentTimeMillis();
 		SortMergeJoin j = new SortMergeJoin(t1, t2);
-		j.join("joined", "database/joined.csv");
+		j.join("database/joined.csv");
 		long endTime = System.currentTimeMillis();
 		long duration = (endTime - startTime);
 		System.out.println("Duration: " + (endTime-startTime) + " ms");

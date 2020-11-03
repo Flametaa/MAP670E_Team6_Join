@@ -9,7 +9,7 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 
 public class SortOperator {
-	public static int NUM_BUFFERS = 4;
+	public static int NUM_BUFFERS = 10;
 	
 	private Table table;
 	private PageManager pageManager;
