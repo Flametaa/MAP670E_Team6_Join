@@ -1,5 +1,4 @@
 import java.io.File;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -17,7 +16,7 @@ public class SortMergeJoin {
 	private int markRecord;
 	private int markPage;
 	private List<Record> joined;
-	private Comparator<TableRecord> comparator;
+	private Comparator<Record> comparator;
 	
 	public SortMergeJoin(Table t1, Table t2) {
 		String pathSortedR = "database/sorted_tables/sorted_" + t1.getTablename() + ".csv";
@@ -30,7 +29,7 @@ public class SortMergeJoin {
 		}
 		if (!fileL.exists()) {
 			SortOperator sortOperatorL = new SortOperator(t2);
-			sortOperatorL.externalSort("database/runR", "database/mergeL", pathSortedL);
+			sortOperatorL.externalSort("database/runL", "database/mergeL", pathSortedL);
 		}
 		this.r= new Table("sorted_" + t1.getTablename(), pathSortedR);
 		this.l= new Table("sorted_" + t2.getTablename(), pathSortedL);
@@ -50,20 +49,20 @@ public class SortMergeJoin {
 		int right=0;
 		boolean end=false;
 		boolean lock=true;
-		List<TableRecord> PageR= PageManagerR.loadPageToMemory(right);
+		List<Record> PageR= PageManagerR.loadPageToMemory(right);
 		for ( int x=0 ; x<this.PageinL;x++) { // Looping over all the left pages starting from zero
 			this.LeftPointer=0; // in Every left page we start with a left pointer at position zero 
 			lock=true; // lock is used when we need to turn to another Left Page
-			List<TableRecord> PageL= PageManagerL.loadPageToMemory(x);  // Locating the LeftPage
+			List<Record> PageL= PageManagerL.loadPageToMemory(x);  // Locating the LeftPage
 			while(end==false && lock==true) { //Keep running if it's not done , and when left page still have records
 				if(this.markRecord==-1 && this.markPage==-1) {
-					while(comparator.compare(PageL.get(LeftPointer), PageR.get(RightPointer)) < 0 && lock) {
+					while(lock && comparator.compare(PageL.get(LeftPointer), PageR.get(RightPointer)) < 0) {
 						LeftPointer++; // Increment the left pointer 
 						if(LeftPointer > PageL.size()-1) { // But we need to check if this pointer is bigger than the Page size
 							lock=false; // If true we need to move to the next left page thus apply lock so it wont enter another function down
 						}
 					}
-					while(comparator.compare(PageL.get(LeftPointer), PageR.get(RightPointer)) > 0 && lock) {
+					while(lock && comparator.compare(PageL.get(LeftPointer), PageR.get(RightPointer)) > 0) {
 						RightPointer++;
 						if(RightPointer > PageR.size()-1) { // we need to check if the rightpointer is bigger than the size of the right page
 							right++; // increment the page
@@ -80,7 +79,7 @@ public class SortMergeJoin {
 						this.markRecord=RightPointer; // set the mark record
 					}
 				}
-				if(comparator.compare(PageL.get(LeftPointer), PageR.get(RightPointer)) == 0 && lock) {
+				if(lock && comparator.compare(PageL.get(LeftPointer), PageR.get(RightPointer)) == 0) {
 					// merge both
 					List<String> resultList = new ArrayList<String>(Arrays.asList(PageL.get(LeftPointer).getValues()));
 					resultList.addAll(Arrays.asList(PageR.get(RightPointer).getValues()));

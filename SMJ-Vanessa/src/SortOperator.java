@@ -104,8 +104,8 @@ public class SortOperator {
                     }
 // </editor-fold>
                     
-                    ArrayList<Iterator<TableRecord>> records = new ArrayList<>();
-                    Queue<Pair<TableRecord, Integer>> pq = new PriorityQueue<Pair<TableRecord, Integer>>(((o1, o2) -> comparator.compare(o1.getFirst(), o2.getFirst())));
+                    ArrayList<Iterator<Record>> records = new ArrayList<>();
+                    Queue<Pair<Record, Integer>> pq = new PriorityQueue<Pair<Record, Integer>>(((o1, o2) -> comparator.compare(o1.getFirst(), o2.getFirst())));
                     int[] nbLoadedPages = new int[tablesPM.size()];
 
                     // <editor-fold defaultstate="collapsed" desc=" initialize the priority queue and the records iterators ">
@@ -122,7 +122,7 @@ public class SortOperator {
 
                     // <editor-fold defaultstate="collapsed" desc=" fill bufferRecords in priority order ">
                     while (pq.size() > 0) {
-                        Pair<TableRecord, Integer> nextRecord = pq.remove();
+                        Pair<Record, Integer> nextRecord = pq.remove();
                         buffersRecords.add(nextRecord.getFirst());
                         if (buffersRecords.size() == PageManager.RECORDS_PER_PAGE) {
                             DiskManager.appendRecordsToDisk(outputPath, buffersRecords);
@@ -147,7 +147,7 @@ public class SortOperator {
                 level++;
                 runsToMergeTotalNum = runsNum;
                 
-            } while(runsToMergeTotalNum!=1); // changed to runsToMergeTotalNum instead of runsNum
+            } while(runsNum!=1);
         	String result = mergeRunsDir + "/" + "run_" + (Math.max(0,mergeRunsNum-1)) + "_0.csv";
         	return result; 
         }

@@ -19,6 +19,21 @@ public class DiskManager {
 		}
 	}
 	
+	static public boolean deleteDirectory(String dir) {
+		File path = new File(dir);
+	    if (path.exists()) {
+	        File[] files = path.listFiles();
+	        for (int i = 0; i < files.length; i++) {
+	            if (files[i].isDirectory()) {
+	                deleteDirectory(files[i].getPath());
+	            } else {
+	                files[i].delete();
+	            }
+	        }
+	    }
+	    return (path.delete());
+	}
+	
 	public static void writeRecordsToDisk(String filename, List<Record> records) {
 		FileWriter fileWriter = null;
 		try {
@@ -49,16 +64,5 @@ public class DiskManager {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-	
-	public static void deleteDirectory(String dir) {
-		File directoryToBeDeleted = new File(dir);
-	    File[] allContents = directoryToBeDeleted.listFiles();
-	    if (allContents != null) {
-	        for (File file : allContents) {
-	            deleteDirectory(file.getPath());
-	        }
-	    }
-	    directoryToBeDeleted.delete();
 	}
 }

@@ -22,18 +22,13 @@ public class Database {
 	
 	public static void main(String[] args) {
 		Database d = new Database("database");
-		Table t1 = d.addTable("purchases", "purchases.csv");
-		Table t2 = d.addTable("clients", "clients.csv");
+		Table t1 = d.addTable("clients_heavy", "clients_heavy.csv");
+		Table t2 = d.addTable("purchases_heavy", "purchases_heavy.csv");
+		long startTime = System.currentTimeMillis();
 		SortMergeJoin j = new SortMergeJoin(t1, t2);
-		Table joined = j.join("joinedClientsPurchases", "database/joined_clients_purchases.csv");
-		System.out.println("Done Join");
-//		PageManager pm = new PageManager(t2);
-//		SortOperator so1 = new SortOperator(t2);
-//		so1.sort("database/run");
-//		System.out.println("Done Sort");
-//		so1.merge("database/run", "database/merge");
-//		System.out.println("Done Merge");
-//		SortOperator so2 = new SortOperator(t2);
-//		so2.sort("database/run2");
+		j.join("joined", "database/joined.csv");
+		long endTime = System.currentTimeMillis();
+		long duration = (endTime - startTime);
+		System.out.println("Duration: " + (endTime-startTime) + " ms");
 	}
 }

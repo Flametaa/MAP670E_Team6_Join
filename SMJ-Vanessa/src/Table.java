@@ -1,6 +1,5 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,11 +18,10 @@ public class Table {
 		this.filename = filename;
 		this.recordsOffset = new ArrayList<Integer>();
 		this.recordsLength = new ArrayList<Integer>();
-		this.numFields = countFields();
-		this.numRecords = countRecords();
+		computeMetadata();
 	}
 
-	private int countRecords() {
+	private void computeMetadata() {
 		int n = 0;
 		BufferedReader br = null;
 		String line = "";
@@ -31,6 +29,10 @@ public class Table {
 			br = new BufferedReader(new FileReader(filename));
 			recordsOffset.add(0);
 			while ((line=br.readLine()) != null) {
+				if (n==0) {
+					String[] l = line.split(CSV_SPLIT_BY);
+					numFields = l.length;
+				}
 				recordsLength.add(line.getBytes().length);
 				recordsOffset.add(line.getBytes().length + recordsOffset.get(recordsOffset.size()-1)+1);
 				n++;
@@ -39,40 +41,7 @@ public class Table {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return n;
-	}
-	
-	private int countFields() {
-		int n = 0;
-		BufferedReader br = null;
-		String line = "";
-		try {
-			br = new BufferedReader(new FileReader(filename));
-			if ((line=br.readLine()) != null) {
-				String[] l = line.split(CSV_SPLIT_BY);
-				n = l.length;
-			}
-			br.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return n;
-	}
-	
-	public String[] getRecordValues(int i) {
-		byte[] bytes = new byte[(int) recordsLength.get(i)];
-		RandomAccessFile raf;
-		try {
-			raf = new RandomAccessFile(filename, "r");
-			raf.seek(recordsOffset.get(i));
-			raf.read(bytes);
-			raf.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		String record = new String(bytes).replace("\"","");
-		String[] values = record.split(CSV_SPLIT_BY);
-		return values;
+		numRecords = n;
 	}
 	
 	public String getTablename() {
