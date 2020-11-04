@@ -43,6 +43,13 @@ public class SortMergeJoinThreadMain extends Thread
     @Override
     public void run()
     {
+        File directory = new File("database/partitions");
+        if (! directory.exists())
+            directory.mkdir();
+        directory = new File("database/merged_partitions");
+        if (! directory.exists())
+            directory.mkdir();
+        
         long start_time;
         try
         {
