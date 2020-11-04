@@ -30,5 +30,23 @@ public class Database {
 		long endTime = System.currentTimeMillis();
 		long duration = endTime - startTime;
 		System.out.println("Duration: " + duration + " ms");
+		
+		long startTime0 = System.currentTimeMillis();
+		SortMergeJoinThreadMain j0 = new SortMergeJoinThreadMain(t1, t2, 4, "database/joined_thread.csv");
+		j0.run();
+                try
+                {
+                    j0.join();
+                }
+                catch (InterruptedException ex)
+                {
+                    Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
+                }
+		long endTime0 = System.currentTimeMillis();
+		long duration0 = endTime0 - startTime0;
+		System.out.println("Total duration: " + duration0 + " ms");
+                System.out.println("Partitioning duration: " + j0.duration_partition + " ms");
+                System.out.println("Threads duration: " + j0.duration_threads + " ms");
+                System.out.println("Combine duration: " + j0.duration_combine + " ms");
 	}
 }
