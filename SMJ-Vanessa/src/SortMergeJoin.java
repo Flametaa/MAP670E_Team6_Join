@@ -112,7 +112,19 @@ public class SortMergeJoin {
 						right++;
 						if(right>this.PageinR-1) 
 						{
-							end=true;
+							RightPointer=this.markRecord; // reset the pointers
+							if ((right-1)!=this.markPage) 
+							{ // reset the page
+								right = this.markPage;
+								PageR=PageManagerR.loadPageToMemory(right); // we reload the page we now need 
+							}
+							LeftPointer++;
+							if(LeftPointer > PageL.size()-1) 
+							{
+								lock=false;
+							}
+							this.markRecord=-1;	
+							this.markPage=-1;
 						} 
 						else 
 						{
