@@ -25,11 +25,11 @@ public class SortMergeJoin {
 		File fileL = new File(pathSortedL);
 		if (!fileR.exists()) {
 			SortOperator sortOperatorR = new SortOperator(t1, comparator);
-			sortOperatorR.externalSort("database/runR", "database/mergeR", pathSortedR);
+			sortOperatorR.externalSort("database/runR/"+t1.getTablename(), "database/mergeR/"+t1.getTablename(), pathSortedR);
 		}
 		if (!fileL.exists()) {
 			SortOperator sortOperatorL = new SortOperator(t2, comparator);
-			sortOperatorL.externalSort("database/runL", "database/mergeL", pathSortedL);
+			sortOperatorL.externalSort("database/runL/"+t2.getTablename(), "database/mergeL/"+t2.getTablename(), pathSortedL);
 		}
 		this.r= new Table("sorted_" + t1.getTablename(), pathSortedR);
 		this.l= new Table("sorted_" + t2.getTablename(), pathSortedL);
