@@ -9,7 +9,7 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 
 public class SortOperator {
-	public static int NUM_BUFFERS = 10;
+	public static int NUM_BUFFERS = 5;
 	
 	private Table table;
 	private PageManager pageManager;
@@ -25,7 +25,7 @@ public class SortOperator {
 		sort(runsDir);
 		String result = merge(runsDir, mergeRunsDir);
 		try {
-			Files.move(Paths.get(result), Paths.get(outputPath), StandardCopyOption.REPLACE_EXISTING);
+			Files.copy(Paths.get(result), Paths.get(outputPath), StandardCopyOption.REPLACE_EXISTING);
 			DiskManager.deleteDirectory(runsDir);
 			DiskManager.deleteDirectory(mergeRunsDir);
 		} catch (Exception e) {
@@ -84,7 +84,7 @@ public class SortOperator {
                         String outputPath = mergeRunsDir + "/" + "run_" + (level) + "_" + (runsToMergeTotalNum - 1) + ".csv";
                         
                         try {
-                        	Files.copy(Paths.get(path), Paths.get(outputPath));
+                        	Files.move(Paths.get(path), Paths.get(outputPath), StandardCopyOption.REPLACE_EXISTING);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}                        
@@ -139,8 +139,7 @@ public class SortOperator {
                         }
                     }
                     // </editor-fold>
-// </editor-fold>
-                    
+// </editor-fold>  
                 }
 // </editor-fold>
 
