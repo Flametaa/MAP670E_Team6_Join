@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PageManager {
-	public static int RECORDS_PER_PAGE = 1000;
+	public static int RECORDS_PER_PAGE = 40000;
 	
 	private Table table;
 	private int totalRecords;
@@ -21,9 +21,9 @@ public class PageManager {
 		List<Record> page = new ArrayList<Record>();
 		List<Integer> recordsOffset = table.getRecordsOffset();
 		List<Integer> recordsLength = table.getRecordsLength();
-		RandomAccessFile raf = null;
 		 try {
-			 raf = new RandomAccessFile(table.getFilename(), "r");
+			 RandomAccessFile raf = new RandomAccessFile(table.getFilename(), "r");
+			 FileChannel fc = raf.getChannel();
 			 int start = recordsOffset.get(p*RECORDS_PER_PAGE);
 			 int end;
 			 if (p==numPages-1) {
@@ -31,31 +31,25 @@ public class PageManager {
 			 } else {
 				 end = recordsOffset.get((p+1)*RECORDS_PER_PAGE)-1;
 			 }
-			 MappedByteBuffer buffer = raf.getChannel().map(FileChannel.MapMode.READ_ONLY, start, end-start);
+			 MappedByteBuffer buffer = fc.map(FileChannel.MapMode.READ_ONLY, start, end-start);
 			 String line = "";
 			 for(int j = 0; j < end-start; j++) {
 				 if ((char)buffer.get(j) != '\n') {
 					 line += (char)buffer.get(j);
 				 } else {
-					 Record r = new Record(line.split(Table.CSV_SPLIT_BY));
+					 Record r = new Record(line.replace("\"","").split(Table.CSV_SPLIT_BY));			 
 					 page.add(r);
 					 line = "";
 				 }
 			 }
-			 Record r = new Record(line.split(Table.CSV_SPLIT_BY));
+			 Record r = new Record(line.replace("\"","").split(Table.CSV_SPLIT_BY));
 			 page.add(r);
 			 buffer.force();
 			 buffer.clear();
+			 fc.close();
+			 raf.close();
 		 } catch (Exception e) {
-			 e.printStackTrace();
-		 } finally {
-			 try {
-				 if (raf != null) {
-					 raf.close();
-				 }
-			 } catch (Exception e) {
-				 e.printStackTrace();
-			 }
+		  throw new RuntimeException(e);
 		 }
 		 return page;
 	}

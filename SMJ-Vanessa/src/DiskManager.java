@@ -1,6 +1,5 @@
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -20,16 +19,20 @@ public class DiskManager {
 		}
 	}
 	
-	public static void deleteDirectory(String dir) {
-		File directoryToBeDeleted = new File(dir);
-	    File[] allContents = directoryToBeDeleted.listFiles();
-	    if (allContents != null) {
-	        for (File file : allContents) {
-	            deleteDirectory(file.getPath());
+	static public boolean deleteDirectory(String dir) {
+		File path = new File(dir);
+	    if (path.exists()) {
+	        File[] files = path.listFiles();
+	        for (int i = 0; i < files.length; i++) {
+	            if (files[i].isDirectory()) {
+	                deleteDirectory(files[i].getPath());
+	            } else {
+	                files[i].delete();
+	            }
 	        }
 	    }
 	    System.gc();
-	    directoryToBeDeleted.delete();
+	    return (path.delete());
 	}
 	
 	public static void writeRecordsToDisk(String filename, List<Record> records) {
@@ -38,20 +41,13 @@ public class DiskManager {
 			fileWriter = new FileWriter(filename);
 			for (Record r : records) {
 				String line = String.join(CSV_SEPARATOR, r.getValues());
-				fileWriter.write(line);
-				fileWriter.write(NEW_LINE_SEPARATOR);
+				fileWriter.append(line);
+				fileWriter.append(NEW_LINE_SEPARATOR);
 			}
+			fileWriter.flush();
+			fileWriter.close();
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
-				try {
-					if (fileWriter != null) {
-					fileWriter.flush();
-					fileWriter.close();
-					}
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
 		}
 	}
 	
@@ -64,17 +60,10 @@ public class DiskManager {
 				fileWriter.append(line);
 				fileWriter.append(NEW_LINE_SEPARATOR);
 			}
+			fileWriter.flush();
+			fileWriter.close();
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
-			try {
-				if (fileWriter != null) {
-				fileWriter.flush();
-				fileWriter.close();
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-}
+		}
 	}
 }

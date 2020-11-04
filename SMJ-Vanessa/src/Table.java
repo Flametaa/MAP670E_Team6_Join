@@ -37,16 +37,9 @@ public class Table {
 				recordsOffset.add(line.getBytes().length + recordsOffset.get(recordsOffset.size()-1)+1);
 				n++;
 			}
+			br.close();
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
-			try {
-				if (br != null) {
-					br.close();
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
 		}
 		numRecords = n;
 	}
