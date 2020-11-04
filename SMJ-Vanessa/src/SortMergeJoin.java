@@ -16,9 +16,9 @@ public class SortMergeJoin {
 	private int markRecord;
 	private int markPage;
 	private List<Record> joined;
-	private Comparator<Record> comparator = (r1, r2) -> (r1.getValue(0)).compareTo(r2.getValue(0));
+	private Comparator<Record> comparator = (r1,r2) -> Integer.compare(Integer.parseInt(r1.getValue(0)), Integer.parseInt(r2.getValue(0)));
 	
-	public SortMergeJoin(Table t1, Table t2) { 
+	public SortMergeJoin(Table t1, Table t2) {
 		String pathSortedR = "database/sorted_tables/sorted_" + t1.getTablename() + ".csv";
 		String pathSortedL = "database/sorted_tables/sorted_" + t2.getTablename() + ".csv";
 		File fileR = new File(pathSortedR);
@@ -42,6 +42,7 @@ public class SortMergeJoin {
 		this.markRecord=-1;
 		this.markPage=-1;
 		this.joined = new ArrayList<Record>();
+		this.comparator = (r1, r2) -> (r1.getValue(0)).compareTo(r2.getValue(0));
 	}
 	
 	public void join(String filename) {
