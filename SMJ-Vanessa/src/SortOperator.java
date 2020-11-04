@@ -15,10 +15,10 @@ public class SortOperator {
 	private PageManager pageManager;
 	private Comparator<Record> comparator;
 	
-	public SortOperator(Table table) {
+	public SortOperator(Table table, Comparator<Record> comparator) {
 		this.table = table;
 		this.pageManager = new PageManager(this.table);
-		this.comparator = (r1, r2) -> (r1.getValue(0)).compareTo(r2.getValue(0));
+		this.comparator = comparator;
 	}
 	
 	public void externalSort(String runsDir, String mergeRunsDir, String outputPath) {
