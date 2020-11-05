@@ -1,6 +1,6 @@
 # MAP670E_Team6_Join
 
-# Implementation of Hash Join with distributed execution with Spark.
+# Implementation of Hash Join with Spark Context for distributed execution.
 
 #This code contain 2 scala classes "GraceHashJoinSpark.scala" and "ClassicHashJoinSpark.scala".
 
