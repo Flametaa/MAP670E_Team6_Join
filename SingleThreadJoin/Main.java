@@ -1,0 +1,80 @@
+import java.io.File;
+import java.io.IOException;
+import java.io.FileWriter;
+import java.io.BufferedWriter;
+import java.nio.file.Paths;
+
+
+public class Main {
+    public static void main(String[] args){
+        String folderPath = new File("").getAbsolutePath(); //absolute path of the current directory
+        System.out.println("Working directory: " + folderPath);
+
+        //All data is to be stored in the data folder in the parent directory
+        String dataPath = Paths.get(folderPath, "data").toString();
+        System.out.println("Data directory: " + dataPath);
+        System.out.println("All files will be saved here. \n");
+
+        //Please make sure to pass the names with no extension
+        //Select the databases to join from the data folder
+        String rName = "clients";
+        String sName= "purchases";
+
+        //Indices of the keys we're conditioning in each dataset
+        int rKey = 0;
+        int sKey = 0;
+
+        //number of partitions
+        int n = 5;
+        //Whether or not to delete the partition files after execution
+        Boolean keepPartitions = false;
+
+        //Result of the join will be stored in this file
+        String resultPath = Paths.get(dataPath, "join.csv").toString(); //cross-plateforms
+
+        File resultFile = new File(resultPath);
+        if (!resultFile.exists()) {
+            try {
+                resultFile.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        FileWriter fw = null;
+        try {
+            fw = new FileWriter(resultFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        BufferedWriter resultBuffer = new BufferedWriter(fw);
+
+        //Benchmarking execution time
+        long startTime = System.nanoTime();
+        GraceHash graceHash = new GraceHash(rName, sName, dataPath, rKey, sKey, n, resultBuffer);
+        graceHash.graceJoin();
+
+        try {resultBuffer.close();} 
+        catch (IOException e) {e.printStackTrace();}
+
+        long stopTime = System.nanoTime();
+        System.out.println("The execution time is :"+(stopTime-startTime)/1e9+" seconds\n");
+
+        //Benchmarking Memory used
+        int dataSize = 1024 * 1024;
+        System.out.println("Total Memory :" + Runtime.getRuntime().totalMemory()/dataSize + "MB\n");
+        System.out.println("Used Memory   :  " + (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())/dataSize + "MB\n");
+        
+        //Deleting partition files if not wanted
+        if (!keepPartitions){
+            System.out.println("Deleting partitions..\n");
+
+            File dataDirectory = new File(dataPath);
+            for (File f : dataDirectory.listFiles()) {
+                String fName = f.getName();
+                if (fName.startsWith(rName + '_') || fName.startsWith(sName + '_')) {
+                    f.delete();
+                }
+            }
+        }
+    }
+}
