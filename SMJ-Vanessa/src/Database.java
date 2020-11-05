@@ -33,7 +33,7 @@ public class Database {
 		
 		long startTime0 = System.currentTimeMillis();
 		SortMergeJoinThreadMain j0 = new SortMergeJoinThreadMain(t1, t2, 4, "database/joined_thread.csv");
-		j0.run();
+		j0.start();
                 try
                 {
                     j0.join();
