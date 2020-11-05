@@ -110,7 +110,7 @@ public class SortMergeJoinThreadMain extends Thread
         {
             Logger.getLogger(SortMergeJoinThreadMain.class.getName()).log(Level.SEVERE, null, ex);
         }
-        duration_combine = start_time - System.currentTimeMillis();
+        duration_combine = System.currentTimeMillis() - start_time;
         
         try
         {
