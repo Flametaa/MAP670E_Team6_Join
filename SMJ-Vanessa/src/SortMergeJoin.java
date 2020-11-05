@@ -17,8 +17,12 @@ public class SortMergeJoin {
 	private int markPage;
 	private List<Record> joined;
 	private Comparator<Record> comparator = (r1,r2) -> Integer.compare(Integer.parseInt(r1.getValue(0)), Integer.parseInt(r2.getValue(0)));
+	private boolean emptyTable;
 	
 	public SortMergeJoin(Table t1, Table t2) {
+		emptyTable = t1.getNumRecords() == 0 || t2.getNumRecords() == 0;
+                if(emptyTable)
+                    return;
 		String pathSortedR = "database/sorted_tables/sorted_" + t1.getTablename() + ".csv";
 		String pathSortedL = "database/sorted_tables/sorted_" + t2.getTablename() + ".csv";
 		File fileR = new File(pathSortedR);
@@ -46,6 +50,11 @@ public class SortMergeJoin {
 	}
 	
 	public void join(String filename) {
+		if(emptyTable)
+                {
+                    DiskManager.writeRecordsToDisk(filename, new ArrayList<Record>());
+                    return;
+                }
 		int right=0;
 		boolean end=false;
 		boolean lock=true;
