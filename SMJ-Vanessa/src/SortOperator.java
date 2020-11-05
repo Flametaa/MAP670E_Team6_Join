@@ -105,7 +105,7 @@ public class SortOperator {
 // </editor-fold>
                     
                     ArrayList<Iterator<Record>> records = new ArrayList<>();
-                    Queue<Pair<Record, Integer>> pq = new PriorityQueue<Pair<Record, Integer>>(((o1, o2) -> comparator.compare(o1.getFirst(), o2.getFirst())));
+                    Queue<Pair<Record, Integer>> pq = new PriorityQueue<Pair<Record, Integer>>((o1, o2) -> comparator.compare(o1.getFirst(), o2.getFirst()));
                     int[] nbLoadedPages = new int[tablesPM.size()];
 
                     // <editor-fold defaultstate="collapsed" desc=" initialize the priority queue and the records iterators ">
