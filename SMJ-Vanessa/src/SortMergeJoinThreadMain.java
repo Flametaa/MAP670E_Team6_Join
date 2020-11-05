@@ -192,7 +192,8 @@ public class SortMergeJoinThreadMain extends Thread
                     bin = -(bin + 1);
                 
                 writers[bin].write(line);
-                writers[bin].newLine();
+                writers[bin].write("\n");
+//                 writers[bin].newLine();
             }
             
             for (int i = 0; i < nb_threads; i++)
