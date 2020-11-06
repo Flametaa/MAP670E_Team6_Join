@@ -5,21 +5,21 @@ package project;
  *
  */
 public class Relation_Attribute {
-	private int value;
+	private String value;
 	private String name;
 	
 	public Relation_Attribute() {
-		this.value = 0;
+		this.value = "";
 		this.name = "";
 	}
-	public Relation_Attribute(int value, String name) {
+	public Relation_Attribute(String value, String name) {
 		this.value = value;
 		this.name = name;
 	}
-	public int getValue() {
+	public String  getValue() {
 		return value;
 	}
-	public void setValue(int value) {
+	public void setValue(String value) {
 		this.value = value;
 	}
 	public String getName() {

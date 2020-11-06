@@ -60,7 +60,7 @@ public class BNLJ {
 				while ( (s = Relations_File.getNextTuple(br2, relation2Name)) != null) {
 					for (int j=0; j<R_outer.size(); j++) {
 						
-						if (R_outer.get(j).getAttribute(col1).getValue() == s.getAttribute(col2).getValue()) {
+						if (R_outer.get(j).getAttribute(col1).getValue().compareTo(s.getAttribute(col2).getValue())==0) {
 							Tuple outputTuple = Tuple.joinTuples(R_outer.get(j), s, col1, col2);
 							if (header) {
 								Relations_File.writeHeader(bw, outputTuple);

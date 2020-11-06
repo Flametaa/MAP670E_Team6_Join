@@ -3,7 +3,6 @@ package project;
 /**
  * final
  */
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +42,7 @@ public class Tuple {
 		this.relationName = relationName;
 	}
 	
-	public int getAttributeValue(int index) {
+	public String getAttributeValue(int index) {
 		return attributes.get(index).getValue();
 	}
 	
@@ -51,7 +50,7 @@ public class Tuple {
 		return attributes.get(index).getName();
 	}
 	
-	public void setAttributeValue(int index, int value) {
+	public void setAttributeValue(int index, String value) {
 		attributes.get(index).setValue(value);
 	}
 	

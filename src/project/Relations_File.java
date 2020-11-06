@@ -154,7 +154,9 @@ public class Relations_File {
 				tuple = new Tuple(attributes.length, relationName);
 				
 				for (int i=0; i<attributes.length; i++) {
-					int attributeValue = Integer.parseInt(attributes[i]);
+					String quotes = "\"";
+					String withoutQuotes = attributes[i].replaceAll(quotes,"");
+					String attributeValue = withoutQuotes;
 					String attributeName = relationName + i;
 					Relation_Attribute attribute = new Relation_Attribute(attributeValue, attributeName);
 					tuple.attributes.add(attribute);

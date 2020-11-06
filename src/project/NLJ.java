@@ -23,7 +23,7 @@ public class NLJ {
 		Tuple s = null;
 		while ((r = Relations_File.getNextTuple(br1, R_Name)) != null) {
 			while ( (s = Relations_File.getNextTuple(br2, S_Name)) != null) {
-				if (r.getAttribute(col1).getValue() == s.getAttribute(col2).getValue()) {
+				if (r.getAttribute(col1).getValue().compareTo(s.getAttribute(col2).getValue())==0) {
 					Tuple outputTuple = Tuple.joinTuples(r, s, col1, col2);
 					
 					// we should write the attributes header beforehand 

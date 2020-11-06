@@ -133,7 +133,7 @@ public class Main {
 			System.out.println();
 			System.out.println("Number of join tuples: " + (Relations_File.countLinesFile(output_T) - 1));
 			System.out.println("Total time of BNLJ : " + bnljTime_Sec + " sec");
-			System.out.println("Complexity of BNLJ: " + "T(" + relation1Name + ") * " + "T("  + relation2Name + ")");
+			//System.out.println("Complexity of BNLJ: " + "T(" + relation1Name + ") * " + "T("  + relation2Name + ")");
 			//System.out.printf(" Cost of disk BNLJ: %.0f I/Os", bnlj_cost);
 			System.out.println();
 			}
