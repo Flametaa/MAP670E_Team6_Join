@@ -24,8 +24,8 @@ public class Database {
 
 	public static void main(String[] args) {
 		Database d = new Database("database");
-		Table t1 = d.addTable("mini_clients", "mini_clients.csv");
-		Table t2 = d.addTable("mini_purchases", "mini_purchases.csv");
+		Table t1 = d.addTable("clients_heavy", "clients_heavy.csv");
+		Table t2 = d.addTable("purchases_heavy", "purchases_heavy.csv");
 		System.out.println("Single-threaded Join");
 		long startTime = System.currentTimeMillis();
 		SortMergeJoin j = new SortMergeJoin(t1, t2);
