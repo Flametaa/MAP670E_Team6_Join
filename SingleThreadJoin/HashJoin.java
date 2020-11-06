@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.io.IOException;
 
 public class HashJoin{
-    //This is the simple Hash Join single thread implementation. 
+    //This is the simple Hash Join single thread implementation.
     //It operates in two phases: Build, Probe/Join
 
     private String rPath;
@@ -20,9 +20,9 @@ public class HashJoin{
 
     //This buffer is going to write directly into the result csv file of the join operation
     //As later on the file will be shared between threads, it is necessary to pass it as an arg
-    private BufferedWriter resultBuffer;
-    
-    public HashJoin(String rPath, String sPath, int rKey, int sKey, long rSize, long sSize, BufferedWriter resultBuffer){
+    private FileManager file;
+
+    public HashJoin(String rPath, String sPath, int rKey, int sKey, long rSize, long sSize, FileManager file){
         //To avoid having another pass on both the datasets,
         //we assume here that their size is known, which will be the case in our Grace Join
         //For the sake of coherence, let R be the smallest dataset
@@ -32,10 +32,10 @@ public class HashJoin{
 
         if (sSize<rSize){
             this.rPath = sPath; this.rKey = sKey;
-            this.sPath = rPath; this.sKey = rKey;  
-        } 
+            this.sPath = rPath; this.sKey = rKey;
+        }
 
-        this.resultBuffer = resultBuffer;
+        this.file = file;
     }
 
     public Map<String, String> buildHashTable(){
@@ -43,7 +43,7 @@ public class HashJoin{
         /The keys of the hashMap are the keys for the join. The values are the rows.
         /Collision may occurr, i.e two entries end up in the same bucket
         /The HashMap implicitely deals with that using linked lists.*/
-        
+
         Map<String, String> hmap = new HashMap<>();
         try (BufferedReader br = Files.newBufferedReader(Paths.get(rPath))) {
             String rRow;
@@ -53,7 +53,7 @@ public class HashJoin{
             }
             return hmap;
         }
-        catch (IOException e){ 
+        catch (IOException e){
             System.err.format("IOException: %s%n", e);
         }
         return null;
@@ -73,16 +73,14 @@ public class HashJoin{
                 //otherwise, is null
                 String rRow = hmap.get(key);
                 if (rRow != null){
-                    try{
-                        //Remove the duplicate key column before writing 
-                        String[] sRowArray = sRow.split(",") ;
-                        sRowArray = Arrays.stream(sRowArray).filter(s -> !s.equals(key)).toArray(String[]::new);
-                        sRow = String.join(",", sRowArray);
 
-                        resultBuffer.write(rRow + "," + sRow + "\n");
-                    } catch (IOException e){
-                        e.printStackTrace();
-                    }
+                    //Remove the duplicate key column before writing
+                    String[] sRowArray = sRow.split(",") ;
+                    sRowArray = Arrays.stream(sRowArray).filter(s -> !s.equals(key)).toArray(String[]::new);
+                    sRow = String.join(",", sRowArray);
+
+                    file.writeOnFile(rRow + "," + sRow + "\n");
+
                 }
             }
         } catch(IOException e){System.err.format("IOException: %s%n", e);}

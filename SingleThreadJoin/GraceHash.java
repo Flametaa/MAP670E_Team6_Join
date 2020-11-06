@@ -13,7 +13,7 @@ import java.io.IOException;
 import static java.lang.Math.abs;
 
 public class GraceHash {
-    //This is the Grace Join single thread implementation. 
+    //This is the Grace Join single thread implementation.
     //It proceeds the simple algorithm by a partitioning phase.
     //The partitioning is done on both datasets to finally get R1,..Rn and S1,..Sn
     //The classic algorithm HashJoin is then called for each pair of partitions (Ri, Si)
@@ -23,7 +23,7 @@ public class GraceHash {
     private String sName;
     private int rKey;
     private int sKey;
-    private BufferedWriter resultBuffer;
+    private FileManager outputFile;
 
     //The number of partitions is to be tuned by the user and is passed on as an arg.
     private int n;
@@ -33,16 +33,16 @@ public class GraceHash {
     //These lengths will be passed to the classic HashJoin algorithm when called for each pair (Ri, Si)
     private Map<String, long[]> partitionLengths;
 
-    public GraceHash(String rName, String sName, String dataPath, int rKey, int sKey, int n, BufferedWriter resultBuffer){
+    public GraceHash(String rName, String sName, String dataPath, int rKey, int sKey, int n, FileManager outputFile){
         this.dataPath = dataPath;
-        this.rName = rName; 
+        this.rName = rName;
         this.sName = sName;
-        this.rKey = rKey; 
+        this.rKey = rKey;
         this.sKey = sKey;
         this.n = n;
-        this.resultBuffer = resultBuffer;
+        this.outputFile = outputFile;
 
-        
+
         //Initialising the lengths to zeros (rName, [0,0,..]) and (sName, [0,0,..])
         this.partitionLengths = new HashMap<>();
 
@@ -58,26 +58,19 @@ public class GraceHash {
         //It creates n files (dbName0, dbName1,..) in folderPath.
         //This is done using a hash function on the join key. The bucket a row falls into, is the hash of its key.
         //It is different from the hash funciton used for mapping the larger dataset in the classic join algorithm.
-        
+
         String filesPath = Paths.get(dataPath, dbName).toString();  //Base name for files, without extention
 
 
 
         //As we are going to create n files, we need n BufferWriters
-        BufferedWriter[] buffers = new BufferedWriter[n+1];
+        FileManager[] buffers = new FileManager[n+1];
 
         //Creating n files
         for (int i = 0; i < n; i++){
-            File file = new File(filesPath + "_" + i + ".csv"); //Careful, the dbName has to be without extension
-            if (!file.exists()) {
-                try {file.createNewFile();} catch (IOException e) {e.printStackTrace();}
-            }
-            //For each file, create a BufferWriter
-            FileWriter fw = null;
-            try { fw = new FileWriter(file);} 
-            catch (IOException e) {e.printStackTrace();}
-
-            buffers[i] = new BufferedWriter(fw);
+            FileManager file = new FileManager(filesPath + "_" + i + ".csv");
+            file.createFile();
+            buffers[i] = file;
         }
 
         //We scan the data set and hash the keys of each row.
@@ -90,18 +83,17 @@ public class GraceHash {
                 int hashCode = abs(key.hashCode()) % n;
 
                 //The row falls into the bucket of index hashCode
-                buffers[hashCode].write(dbRow + "\n"); //no need to flush
-   
+                buffers[hashCode].writeOnFile(dbRow + "\n"); //no need to flush
+
                 //Increment the length of partition of index hashCode
                 partitionLengths.get(dbName)[hashCode]++;
- 
+
             }
         } catch (IOException e) {System.err.format("IOException: %s%n", e);}
 
         //Close all files after partitioning
         for (int i = 0; i < n; i++){
-            try { buffers[i].close();} 
-            catch (IOException e) {e.printStackTrace();}
+            buffers[i].closeFile();
         }
     }
 
@@ -111,7 +103,7 @@ public class GraceHash {
         partition(rName, rKey);
         partition(sName, sKey);
 
-        //Now we need to call the classic join on each pair 
+        //Now we need to call the classic join on each pair
         for (int i = 0; i < n; i++){
 
             //construct the appropriate path
@@ -124,7 +116,7 @@ public class GraceHash {
             long sSize = partitionLengths.get(sName)[i];
             if (rSize == 0 || sSize == 0) continue;
 
-            HashJoin joinPartition = new HashJoin(rPath,sPath, rKey, sKey, rSize, sSize, resultBuffer);
+            HashJoin joinPartition = new HashJoin(rPath,sPath, rKey, sKey, rSize, sSize, outputFile);
             joinPartition.join();
 
         }

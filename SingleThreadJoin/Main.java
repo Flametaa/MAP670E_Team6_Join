@@ -31,30 +31,16 @@ public class Main {
 
         //Result of the join will be stored in this file
         String resultPath = Paths.get(dataPath, "join.csv").toString(); //cross-plateforms
-
-        File resultFile = new File(resultPath);
-        if (!resultFile.exists()) {
-            try {
-                resultFile.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        FileWriter fw = null;
-        try {
-            fw = new FileWriter(resultFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        BufferedWriter resultBuffer = new BufferedWriter(fw);
+        FileManager outputFile = new FileManager(resultPath);
+        outputFile.createFile();
 
         //Benchmarking execution time
         long startTime = System.nanoTime();
-        GraceHash graceHash = new GraceHash(rName, sName, dataPath, rKey, sKey, n, resultBuffer);
+        GraceHash graceHash = new GraceHash(rName, sName, dataPath, rKey, sKey, n, outputFile);
         graceHash.graceJoin();
 
-        try {resultBuffer.close();} 
-        catch (IOException e) {e.printStackTrace();}
+        outputFile.closeFile();
+
 
         long stopTime = System.nanoTime();
         System.out.println("The execution time is :"+(stopTime-startTime)/1e9+" seconds\n");
@@ -63,7 +49,7 @@ public class Main {
         int dataSize = 1024 * 1024;
         System.out.println("Total Memory :" + Runtime.getRuntime().totalMemory()/dataSize + "MB\n");
         System.out.println("Used Memory   :  " + (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())/dataSize + "MB\n");
-        
+
         //Deleting partition files if not wanted
         if (!keepPartitions){
             System.out.println("Deleting partitions..\n");
