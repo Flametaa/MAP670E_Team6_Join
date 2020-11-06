@@ -13,7 +13,7 @@ public class DiskManager {
 		try {
 			Path path = Paths.get(dir);
 			deleteDirectory(dir);
-			Files.createDirectory(path);
+			Files.createDirectories(path);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
