@@ -24,15 +24,17 @@ public class Database {
 
 	public static void main(String[] args) {
 		Database d = new Database("database");
-		Table t1 = d.addTable("clients_heavy", "clients_heavy.csv");
-		Table t2 = d.addTable("purchases_heavy", "purchases_heavy.csv");
+		Table t1 = d.addTable("mini_clients", "mini_clients.csv");
+		Table t2 = d.addTable("mini_purchases", "mini_purchases.csv");
+		System.out.println("Single-threaded Join");
 		long startTime = System.currentTimeMillis();
 		SortMergeJoin j = new SortMergeJoin(t1, t2);
 		j.join("database/joined.csv");
 		long endTime = System.currentTimeMillis();
 		long duration = endTime - startTime;
-		System.out.println("Single-threaded duration: " + duration + " ms");
+		System.out.println("Total Duration: " + duration + " ms\n");
 
+		System.out.println("Multi-threaded Join");
 		long startTime0 = System.currentTimeMillis();
 		SortMergeJoinThreadMain j0 = new SortMergeJoinThreadMain(t1, t2, 2, "database/joined_thread.csv");
 		j0.start();
