@@ -74,7 +74,7 @@ public class SortMergeJoinThreadMain extends Thread {
 
 	private void createPartitions() throws IOException {
 		TreeMap<Integer, Integer> histo_r = getExactHistogram(table_r);
-		Integer[] boundaries = getBoundaries(histo_r, nb_threads);
+		Integer[] boundaries = getBoundaries(table_r, histo_r, nb_threads);
 		partition(table_r, boundaries, JoinSide.R);
 		partition(table_s, boundaries, JoinSide.S);
 	}
@@ -93,8 +93,8 @@ public class SortMergeJoinThreadMain extends Thread {
 		return histo;
 	}
 
-	private Integer[] getBoundaries(TreeMap<Integer, Integer> histogram, int nbBins) {
-		int nb_records_per_thread = (histogram.size() - 1) / nbBins + 1;
+	private Integer[] getBoundaries(Table table, TreeMap<Integer, Integer> histogram, int nbBins) {
+		int nb_records_per_thread = (table.getNumRecords() - 1) / nbBins + 1;
 		int sum = 0;
 		int x = nb_records_per_thread, current_bin = 0;
 		Integer[] boundaries = new Integer[nbBins - 1];
