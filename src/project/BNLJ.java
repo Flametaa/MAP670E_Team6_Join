@@ -45,7 +45,7 @@ public class BNLJ {
 		BufferedReader br1 = Relations_File.createBufferedReaderAndSkipFirstLine(R);
 		BufferedReader br2 = Relations_File.createBufferedReaderAndSkipFirstLine(S);
 		BufferedWriter bw = Relations_File.createBufferedWriter(output_join);
-		boolean header = true; // used to print the header
+		boolean header = true; // used to print the header in the table output_join 
 
 		List<Tuple> R_outer = new ArrayList<Tuple>(); // block of relation1 (outer relation with less records than relation2)
 		
