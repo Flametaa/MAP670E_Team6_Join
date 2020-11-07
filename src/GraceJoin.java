@@ -9,7 +9,7 @@ import java.io.IOException;
 
 import static java.lang.Math.abs;
 
-public class GraceHash {
+public class GraceJoin {
     //This is the Grace Join single thread implementation.
     //It proceeds the simple algorithm by a partitioning phase.
     //The partitioning is done on both datasets to finally get R1,..Rn and S1,..Sn
@@ -30,7 +30,7 @@ public class GraceHash {
     //These lengths will be passed to the classic HashJoin algorithm when called for each pair (Ri, Si)
     private Map<String, long[]> partitionLengths;
 
-    public GraceHash(String rName, String sName, String dataPath, int rKey, int sKey, int n, FileManager outputFile){
+    public GraceJoin(String rName, String sName, String dataPath, int rKey, int sKey, int n, FileManager outputFile){
         this.dataPath = dataPath;
         this.rName = rName;
         this.sName = sName;

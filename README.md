@@ -42,7 +42,7 @@ If you wish to join different data sets, a few parameters will have to change in
 
 - **<ins>Joining</ins>**: Our first approach was to associate one joining thread for each partition, for a total of **n** threads. However, this is fundamentally in contradiction with the Grace algorithm. The point is to avoid saving the hashtable of a large dataset in memory and work with one hashtable associated to one partition at a time. 
 
-    Recall that each thread responsible for one join operation is going to build a hashmap of the smallest table in memory. In the worst case scenario, i.e, **n** threads running simultaneously (which can happen depending on **n** and the size of the initial tables). This means we'll use as much space as a simple **Hash Join** does, storing the whole Hashmap in memory. 
+    Recall that each thread responsible for one join operation is going to build a hashmap of the smallest table in memory. In the worst case scenario, i.e, **n** threads running simultaneously (which can happen depending on **n** and the size of the initial tables), means we'll use as much space as a simple **Hash Join** does, storing the whole Hashmap in memory. 
 
     The idea here is to have a pool of threads. This is more efficient than the first approach in terms of memory. But it also slows the speed because we are limited by the size of our pool. Once all threads are currently executing, and we still need more partitions to join, i.e, **n** is greater than the number of **cores**, this task will be queued.
 
@@ -54,7 +54,7 @@ If you wish to join different data sets, a few parameters will have to change in
 
 - Optimization details
 
-    - **<ins>Buffers</ins>**: We working with [BufferWriters](https://docs.oracle.com/javase/7/docs/api/java/io/BufferedWriter.html). These are thread safe when threads are trying to wirte to the same file. Which means we don't have to worry about locking the file and already has a **lock**, as the ````BufferWriter.write```` is synchronized. This blocking is slow but necessary to have correct output. 
+    - **<ins>Buffers</ins>**: We working with [BufferWriters](https://docs.oracle.com/javase/7/docs/api/java/io/BufferedWriter.html). These are thread safe when threads are trying to wirte to the same file. Which means we don't have to worry about locking the file, as the ````BufferWriter.write```` is synchronized and already has a **lock**. This blocking is slow but necessary to have correct output. 
 
     - **<ins>Flushing</ins>**: What we can do is wait for the buffer to be full and for it to flush on it's own, instead of flushing after every row that is ready to be written to the result file. To make this even faster, we save multiple rows before passing them to the buffer, which would accelerate the process because flushing is time consuming.
 

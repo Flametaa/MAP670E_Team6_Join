@@ -104,7 +104,8 @@ public class MultiGrace {
             if (rSize == 0 || sSize == 0) continue;
 
             MultiJoin joinPartition = new MultiJoin(rPath,sPath, rKey, sKey, rSize, sSize, outputFile); //Runnable
-            // Add the thread to the pool
+            // Executes a thread from the pool
+            // If no threads are available, this task will be queued 
             executor.execute(joinPartition);
         }
 
