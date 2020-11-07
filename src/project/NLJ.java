@@ -18,7 +18,7 @@ public class NLJ {
 		BufferedReader br1 = Relations_File.createBufferedReaderAndSkipFirstLine(R_csv);
 		BufferedReader br2 = Relations_File.createBufferedReaderAndSkipFirstLine(S_csv);
 		BufferedWriter bw = Relations_File.createBufferedWriter(output_join);
-		boolean header = true; // boolean used to print the header
+		boolean header = true; // boolean used to print the header in the table output_join
 
 		Tuple r = null;
 		Tuple s = null;
@@ -26,8 +26,6 @@ public class NLJ {
 			while ( (s = Relations_File.getNextTuple(br2, S_Name)) != null) {
 				if (r.getAttribute(col1).getValue().compareTo(s.getAttribute(col2).getValue())==0) {
 					Tuple outputTuple = Tuple.joinTuples(r, s, col1, col2);
-					
-					// we should write the attributes header beforehand 
 					if (header) {
 						Relations_File.writeHeader(bw, outputTuple);
 						header = false;
