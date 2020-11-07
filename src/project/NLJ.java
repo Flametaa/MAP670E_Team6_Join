@@ -3,8 +3,9 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 /**
  * 
- * final
- *
+ * This class correpond to the implementation of the algorithm Nested Loop Join using 
+ * the clasic join. Moreover this class was implemented with the help of theory in this site web
+ * www.geeksforgeeks.org/join-algorithms-in-database/
  */
 public class NLJ {
 	
