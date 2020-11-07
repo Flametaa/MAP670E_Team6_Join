@@ -52,11 +52,11 @@ If you wish to join different data sets, a few parameters will have to change in
     
     So we opted to set the size of the pool to the number of **CPU cores**. In our pool, these threads can be reused once they're done executing their task. It also has the advantage of allowing multiple threads to share the same object instance. 
 
-- Optimization details
+**Optimization details**
 
-    - **<ins>Buffers</ins>**: We working with [BufferWriters](https://docs.oracle.com/javase/7/docs/api/java/io/BufferedWriter.html). These are thread safe when threads are trying to wirte to the same file. Which means we don't have to worry about locking the file, as the ````BufferWriter.write```` is synchronized and already has a **lock**. This blocking is slow but necessary to have correct output. 
+- **<ins>Buffers</ins>**: We working with [BufferWriters](https://docs.oracle.com/javase/7/docs/api/java/io/BufferedWriter.html). These are thread safe when threads are trying to wirte to the same file. Which means we don't have to worry about locking the file, as the ````BufferWriter.write```` is synchronized and already has a **lock**. This blocking is slow but necessary to have correct output. 
 
-    - **<ins>Flushing</ins>**: What we can do is wait for the buffer to be full and for it to flush on its own, instead of flushing after every row that is ready to be written to the result file. To make this even faster, we save multiple rows before passing them to the buffer, which would accelerate the process because it makes lock acquisitions rarer. If the buffer size is really small, then it also serves as a kind of purpose-built buffer which reduces I/O.
+- **<ins>Flushing</ins>**: What we can do is wait for the buffer to be full and for it to flush on its own, instead of flushing after every row that is ready to be written to the result file. To make this even faster, we save multiple rows before passing them to the buffer, which would accelerate the process because it makes lock acquisitions rarer. If the buffer size is really small, then it also serves as a kind of purpose-built buffer which reduces I/O.
 
 
 
