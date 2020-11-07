@@ -1,16 +1,17 @@
 package project;
 /**
- * Final
- Main function for executing Single Nested Loop Join and Block Nested Loop Join algorithms
- @parameters
+ *
+ * Main function for executing Single Nested Loop Join and Block Nested Loop Join algorithms
+ *@parameters
  *args: argument in the form of a string of characters to choose the relations R,S,columns for 
         make the join, the type of algorithm to test and the name of the csv file to keep our result.
+ * Fon the executing of this class you should use the following  format: 
+ * //Format of 'args': -R database_created/authors.csv -c1 0 -S database_created/posts.csv -c2 0 -t BNLJ -n_tup_bloc 200 -o results.csv//
  */
 
 public class Main {
 	
 	public static void main(String[] args) { 
-		//Format of 'args': -R database_created/authors.csv -c1 0 -S database_created/posts.csv -c2 0 -t BNLJ -n_tup_bloc 200 -o results.csv//
 		
 		String R_csv = "";                       //File of relation R in format .csv
 		String S_csv = "";                      //File of relation S in format .csv
