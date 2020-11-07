@@ -10,7 +10,7 @@ package project;
 public class Main {
 	
 	public static void main(String[] args) { 
-		//Format of 'args': -R database_created/D.csv -c1 0 -S database_created/C.csv -c2 2 -t BNLJ -n_tup_bloc 200 -o results.csv//
+		//Format of 'args': -R database_created/authors.csv -c1 0 -S database_created/posts.csv -c2 0 -t BNLJ -n_tup_bloc 200 -o results.csv//
 		
 		String R_csv = "";                       //File of relation R in format .csv
 		String S_csv = "";                      //File of relation S in format .csv
@@ -128,13 +128,10 @@ public class Main {
 			bnlj.blockNestedLoopJoin(R_csv,S_csv,col1, col2,n_tup_bloc, output_T);
 			long bnljTime = System.currentTimeMillis() - bnljStartTime;
 			double bnljTime_Sec = (double) bnljTime / 1000;
-			//double bnlj_cost = ;
 				
 			System.out.println();
 			System.out.println("Number of join tuples: " + (Relations_File.countLinesFile(output_T) - 1));
 			System.out.println("Total time of BNLJ : " + bnljTime_Sec + " sec");
-			//System.out.println("Complexity of BNLJ: " + "T(" + relation1Name + ") * " + "T("  + relation2Name + ")");
-			//System.out.printf(" Cost of disk BNLJ: %.0f I/Os", bnlj_cost);
 			System.out.println();
 			}
 		 
