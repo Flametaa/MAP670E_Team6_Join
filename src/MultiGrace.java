@@ -68,11 +68,11 @@ public class MultiGrace {
         */
         try {rPartitioner.join();} 
         catch (InterruptedException e) {e.printStackTrace();}
-        System.out.println("Partitioner ended..\n");
+        //System.out.println("Partitioner ended..\n");
 
         try {sPartitioner.join();} 
         catch (InterruptedException e) {e.printStackTrace();}
-        System.out.println("Partitioner ended..\n");
+        //System.out.println("Partitioner ended..\n");
 
 
         long stopTime = System.nanoTime();

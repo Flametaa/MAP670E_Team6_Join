@@ -65,7 +65,7 @@ public class MultiJoin implements  Runnable {
 
     @Override
     public void run(){
-        long runStartTime = System.nanoTime();
+        //long runStartTime = System.nanoTime();
 
         //long startTime = System.nanoTime();
         //Builds the HashMap for the smaller dataset
@@ -122,8 +122,8 @@ public class MultiJoin implements  Runnable {
         } catch(IOException e){System.err.format("IOException: %s%n", e);}
         
         //The total time is took for one pair of partitions to be joined
-        long runStopTime = System.nanoTime();
+        //long runStopTime = System.nanoTime();
         //System.out.println("Total time spent writing: "+totalWriteTime/1e9+" seconds\n");
-        System.out.println("Total time spent in run(): "+(runStopTime - runStartTime)/1e9+" seconds\n");
+        //System.out.println("Total time spent in run(): "+(runStopTime - runStartTime)/1e9+" seconds\n");
     }
 }

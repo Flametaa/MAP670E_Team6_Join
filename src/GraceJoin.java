@@ -96,9 +96,16 @@ public class GraceJoin {
 
     public void graceJoin(){
 
+        long startTime = System.nanoTime();
+
         //partition both datasetsx
         partition(rName, rKey);
         partition(sName, sKey);
+
+        long stopTime = System.nanoTime();
+        System.out.println("Partitioning took: "+(stopTime-startTime)/1e9+" seconds\n");
+
+        startTime = System.nanoTime();
 
         //Now we need to call the classic join on each pair
         for (int i = 0; i < n; i++){
@@ -117,5 +124,7 @@ public class GraceJoin {
             joinPartition.join();
 
         }
+        stopTime = System.nanoTime();
+        System.out.println("Joining took: "+(stopTime-startTime)/1e9+" seconds\n");
     }
 }

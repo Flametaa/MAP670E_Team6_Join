@@ -22,7 +22,7 @@ public class Main {
         int sKey = 0;
 
         //number of partitions
-        int n = 30;
+        int n = 5;
         //Whether or not to delete the partition files after execution
         Boolean keepPartitions = false;
 
@@ -31,21 +31,34 @@ public class Main {
         FileManager outputFile = new FileManager(resultPath);
         outputFile.createFile();
 
+        // Single-thread Grace Join
+        System.out.println("------ Starting single-threaded Grace Join ------\n");
         //Benchmarking execution time
         long startTime = System.nanoTime();
-        MultiGrace graceHash = new MultiGrace(rName, sName, dataPath, rKey, sKey, n, outputFile);
+        GraceJoin graceHash = new GraceJoin(rName, sName, dataPath, rKey, sKey, n, outputFile);
         graceHash.graceJoin();
-
-        outputFile.closeFile();
 
 
         long stopTime = System.nanoTime();
-        System.out.println("The execution time is :"+(stopTime-startTime)/1e9+" seconds\n");
+        System.out.println("The total single-threaded execution time is :"+(stopTime-startTime)/1e9+" seconds\n");
+
+
+        //Multi-threaded Grace Join
+        System.out.println("------Starting multi-threaded Grace Join------\n");
+        //Benchmarking execution time
+        startTime = System.nanoTime();
+        MultiGrace multiGraceHash = new MultiGrace(rName, sName, dataPath, rKey, sKey, n, outputFile);
+        multiGraceHash.graceJoin();
+      
+        outputFile.closeFile();
+      
+        stopTime = System.nanoTime();
+        System.out.println("The total multi-threaded execution time is :"+(stopTime-startTime)/1e9+" seconds\n");
 
         //Benchmarking Memory used
         int bytesPerMB = 1024 * 1024;
         System.out.println("Total Memory :" + Runtime.getRuntime().totalMemory()/bytesPerMB + "MB\n");
-        System.out.println("Used Memory   :  " + (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())/bytesPerMB + "MB\n");
+        System.out.println("Used Memory :  " + (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())/bytesPerMB + "MB\n");
 
         //Deleting partition files if not wanted
         if (!keepPartitions){

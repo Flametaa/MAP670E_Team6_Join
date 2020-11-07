@@ -30,7 +30,7 @@ public class Partitioner extends  Thread{
     @Override
     public void run(){
 
-        System.out.println("Partitioner started..\n");
+        //System.out.println("Partitioner started..\n");
         //Contructs the path for the data to be stored
         String filesPath = Paths.get(dataPath, dbName).toString(); 
         //Allocates buffer writers
