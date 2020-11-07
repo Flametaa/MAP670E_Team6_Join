@@ -102,9 +102,7 @@ public class Relations_File {
 		}
 	}
 	
-	
 	// Reads a csv file that represents a relation and returns the number of records.
-	// The first line of the csv file should contain the number of records.
 	public static int getNumberRows(String csvfile) {
 		int number_of_tuples = 0;
 		try {
@@ -222,7 +220,6 @@ public class Relations_File {
 	public static BufferedWriter createBufferedWriter(String csvfile) {
 		BufferedWriter bw = null;
 		try {
-			// writer that appends to the file
 			bw = new BufferedWriter(new FileWriter(csvfile, true));
 		} catch (IOException e) {
 			e.printStackTrace();
