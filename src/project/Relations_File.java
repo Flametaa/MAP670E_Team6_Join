@@ -1,7 +1,9 @@
 package project;
 /**
- * final
- */
+ * This class was implemented in order built  some  methods needed to write and read data to and
+from “.csv” files. This class contains somes methods to save modifications and the creating of buffers 
+for represent to the blocks(very important for the implementation de NLJ and BNLJ)
+**/
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
