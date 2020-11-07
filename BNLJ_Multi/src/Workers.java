@@ -6,82 +6,71 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class Workers extends Thread {
+    /* Static Variables */
     private static BufferedWriter bufferJoinRelation    = null;
-    private static BufferedReader bufferOuterRelation   = null;
     private static Block outerBlock                     = null;
-    private BufferedReader bufferInnerRelation          = null;
-    //private String outerTuple                           = null;
-    private ArrayList<String> outerTuples               = new ArrayList<String>();
-    private String innerTuple                           = null;
-    private String innerTableFile                       = null;
-    private int bufferSize;
     private static Boolean isEmpty                      = false;
+    private static int c1,c2;
 
-    public Workers(String name, Block outerBlock, BufferedWriter bufferJoinRelation, String innerTableFile, int innerBufferSize) {
+    /* Variables */
+    private BufferedReader bufferInnerRelation          = null;
+    private ArrayList<Tuple> outerTuples                = new ArrayList<Tuple>();
+    private Tuple innerTuple                            = null;
+    private String innerTableFile                       = null;
+    private int innerBufferSize;
+    
+
+    public Workers(String name, Block outerBlock, BufferedWriter bufferJoinRelation, String innerTableFile, int innerBufferSize, int c1, int c2) {
         super(name);
-        Workers.outerBlock           = outerBlock;
-        Workers.bufferJoinRelation   = bufferJoinRelation;
+        Workers.outerBlock          = outerBlock;
+        Workers.bufferJoinRelation  = bufferJoinRelation;
+        Workers.c1                  = c1;
+        Workers.c2                  = c2;
         this.innerTableFile         = innerTableFile;
-        this.bufferSize             = innerBufferSize;
+        this.innerBufferSize        = innerBufferSize;
     }
     
     public void run() {
         
         while(!isEmpty){
-            String[] innerTupleFields = null;
+            // Load the outer Block and create the buffer of inner Relation
             try {
-                isEmpty = outerBlock.loadBlock(outerTuples);
-                bufferInnerRelation = new BufferedReader(new FileReader(innerTableFile));
-                innerTuple   = bufferInnerRelation.readLine();
-                innerTupleFields = innerTuple.split(",");
+                isEmpty             = outerBlock.loadBlock(outerTuples);
+                bufferInnerRelation = new BufferedReader(new FileReader(innerTableFile),innerBufferSize);
+                innerTuple          = new Tuple(bufferInnerRelation.readLine());
                 if(outerTuples.size() == 0) break;
-
             } catch (FileNotFoundException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
             
-            while(innerTuple != null){
-                
-                for (String outerTuple : outerTuples){
-                    String outerTupleFields = outerTuple;
-
-                    if(outerTupleFields.equals(innerTupleFields[0]) ){
-                        String joinResult = String.join(",",outerTupleFields,innerTupleFields[2],"\n");
-                        try {
-                            bufferJoinRelation.write(joinResult);
-                        } catch (IOException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
-                        }
-                    }
-
+            // Nested Loop Join Algorithm
+            while(innerTuple.getNumFields()!=0){
+                for (Tuple outerTuple : outerTuples){
+                    JoinOperation.exec(outerTuple,innerTuple,bufferJoinRelation,1,c1,c2);
                 }
+                
+                // Take next tuple of inner Relation
                 try {
-                    innerTuple = bufferInnerRelation.readLine();
-                    if(innerTuple!=null) innerTupleFields = innerTuple.split(",");
-                    
+                    innerTuple = new Tuple(bufferInnerRelation.readLine());
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             }
 
+            // Close buffer
             try {
                 bufferInnerRelation.close();
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
-       
+        
+        // Close buffer
         try {
             bufferInnerRelation.close();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
               

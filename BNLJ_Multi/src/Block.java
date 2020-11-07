@@ -3,26 +3,28 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class Block {
-    private BufferedReader bufferRelation = null;
-    private int numbTuples = 0;
+    private BufferedReader bufferRelation   = null;
+    private int numbTuplesByBlock           = 0;
 
-    public Block(BufferedReader br, int numbTuples) {
-        this.bufferRelation = br;
-        this.numbTuples = numbTuples;
+    public Block(BufferedReader bufferRelation, int numbTuplesByBlock) {
+        this.bufferRelation     = bufferRelation;
+        this.numbTuplesByBlock  = numbTuplesByBlock;
     }
 
-    synchronized public boolean loadBlock(ArrayList<String> block) throws IOException {
+    /* This funcion take a number of tuples from the the buffer and return them in the "tuples" variable
+     * It return a Boolean to say if the buffer is empty
+     * This is a Synchronized method, who avoid the concurrent acces
+     */
+    synchronized public boolean loadBlock(ArrayList<Tuple> tuples) throws IOException {
         String tuple        = bufferRelation.readLine();
         int tupleNumber     = 0;
         boolean isEmpty     = false;
-        String [] attributes= null;
 
-        block.clear();
-        while (tuple != null && tupleNumber < numbTuples ){
-            attributes = tuple.split(",");
-            block.add(attributes[0]);
+        tuples.clear();
+        while (tuple != null && tupleNumber < numbTuplesByBlock ){
+            tuples.add(new Tuple(tuple));
             tupleNumber++;
-            if(tupleNumber < numbTuples) tuple = bufferRelation.readLine();
+            if(tupleNumber < numbTuplesByBlock) tuple = bufferRelation.readLine();
             
         }
 
