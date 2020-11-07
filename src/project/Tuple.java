@@ -1,7 +1,9 @@
 package project;
 
 /**
- * final
+ * This class was created in order to contain methods about the utilisation of tuples or rows in our relations choosed.
+ *This class contains also the method tuple join which allows make the update of values in the output join relation 
+ * when we execute a simple join.In this case we consider the classic join to excute the operations in NLJ and BNLJ
  */
 import java.util.ArrayList;
 import java.util.List;
