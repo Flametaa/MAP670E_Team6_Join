@@ -4,9 +4,11 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.util.ArrayList;
 import java.util.List;
-/**final
- * 
- **/
+/** 
+ * This class correpond to the implementation of the algorithm Block Nested Loop Join using 
+ * the clasic join and the notions de blocks for each relation. Moreover this class was implemented with the help of theory in this site web
+ * www.geeksforgeeks.org/join-algorithms-in-database/
+**/
 public class BNLJ {
 	/** BNLJ. 
 	 * Each block contains nb_tup_bloc tuples
