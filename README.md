@@ -2,11 +2,11 @@
 
 This folder contains our implementations of the **Grace Join** algorithm. All data is found in the [data](/data) folder along with the resulting dataset. All the code is found in the [src](/src). It contains the single thread as well as the multithreaded implementation.
 
-Running the [Main.java](/HashJoin_Clean/src/Main.java) would run both implementations on the existing datasets [clients.csv](/data/clients.csv) and [purchases.csv](/data/purchases.csv). It returns the result in [join_clients_purchases.csv](/data/join_clients_purchases.csv). It would also output the total execution time, the time it took to join and in case of multithreading, the joining the partioning time. 
+Running the [Main.java](/src/Main.java) would run both implementations on the existing datasets [clients.csv](/data/clients.csv) and [purchases.csv](/data/purchases.csv). It returns the result in [join_clients_purchases.csv](/data/join_clients_purchases.csv). It would also output the total execution time, the time it took to join and in case of multithreading, the joining the partioning time. 
 
 (//TODO : for now just the multithread output --> add comparison, and Spark files)
 
-If you wish to join different data sets, a few parameters will have to change in the [Main.java](/HashJoin_Clean/src/Main.java) file. Make sure to set the following : 
+If you wish to join different data sets, a few parameters will have to change in the [Main.java](/src/Main.java) file. Make sure to set the following : 
 
     - The name of the datasets with no extentions, no path needed.
     - The index of the keys for the equality condition
@@ -25,7 +25,7 @@ If you wish to join different data sets, a few parameters will have to change in
     - [GraceJoin.java](/src/GraceJoin.java) implements Grace Join algorithm. It also operates in two steps using two dedicated functions to:
         - Partition both datasets into **n** partitions i.e *R1,.., Rn and S1,..,Sn*. This is done using a different hash function that'll decide which bucket each row would fall into.
         
-        *Note: **n** is fixed by the user in the [Main.java](/HashJoin_Clean/src/Main.java)*
+        *Note: **n** is fixed by the user in the [Main.java](/src/Main.java)*
         - Iterates on each pair and calls the [HashJoin.java](src/HashJoin.java), the problem of joining two large tables is divided into m partial joins performed by a simple Hash Join each.
 
 - Multi-thread implementation
