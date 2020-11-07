@@ -27,7 +27,7 @@ public class Main {
         Boolean keepPartitions = false;
 
         //Result of the join will be stored in this file
-        String resultPath = Paths.get(dataPath, "join" + rName + "_" + sName + ".csv").toString(); //cross-platform
+        String resultPath = Paths.get(dataPath, "join_" + rName + "_" + sName + ".csv").toString(); //cross-platform
         FileManager outputFile = new FileManager(resultPath);
         outputFile.createFile();
 
