@@ -3,6 +3,8 @@ package Join
 import org.apache.spark.SparkContext._
 import org.apache.spark.rdd.RDD
 import org.apache.spark._
+import java.nio.file.Paths
+import java.nio.file.Files
 
 object SMJSpark {
   def main(args: Array[String]): Unit = {
@@ -14,8 +16,9 @@ object SMJSpark {
     val inputPath1 = "tables/clients_heavy.csv"
     val inputPath2 = "tables/purchases_heavy.csv"
 
-    val intermediateDir = "intermediate"
+    val tempDir = "temp"
     val outputDir = "results"
+    if (!Files.exists(Paths.get(outputDir))) Files.createDirectory(Paths.get(outputDir))
     
     val outputPath = "results/joined.csv"
 
@@ -29,19 +32,22 @@ object SMJSpark {
                .map(record => (record(0).toInt, record))
 
     val smj = new SortMergeJoin(t1, t2)
-    val joined = smj.join("Hash", 4)
+    val joined = smj.join("Hash", 5)
 
     val endJoin = System.currentTimeMillis()
 
-    FileManager.writeRDDToFile(joined, intermediateDir, outputDir, outputPath)
+    FileManager.writeRDDToFile(joined, tempDir, outputDir, outputPath)
     val end = System.currentTimeMillis()
 
     val joinDuration = endJoin - start;
     val totalDuration = end - start;
     
     println(joined.count() + " records")
-    println("Join Duration: " + joinDuration + " ms")
+    println("Sort-Merge Join Duration: " + joinDuration + " ms")
     println("Total Duration: " + totalDuration + " ms")
+    
+    println("\nCleaning Disk...");
+    FileManager.delete(tempDir);
   }
 }
 

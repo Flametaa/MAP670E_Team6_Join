@@ -4,8 +4,6 @@ import java.io.BufferedReader
 import java.io.BufferedWriter
 import java.io.FileReader
 import java.io.FileWriter
-import java.nio.file.Files
-import java.nio.file.Paths
 import org.apache.spark.rdd.RDD
 import java.io.File
 
@@ -28,9 +26,7 @@ object FileManager {
 
   def writeRDDToFile(rdd: RDD[Array[String]], intermediateDir: String, outputDir: String, outputPath: String) = {
     rdd.map(record => record.mkString(",")).saveAsTextFile(intermediateDir)
-    if (!Files.exists(Paths.get(outputDir))) Files.createDirectory(Paths.get(outputDir))
     mergeFiles(intermediateDir, outputPath, rdd.partitions.size)
-    delete(intermediateDir)
   }
 
   def delete(file: String) {
