@@ -33,7 +33,7 @@ object SMJSpark {
 
     val smj = new SortMergeJoin(t1, t2)
     val joined = smj.join("Hash", 5)
-
+    
     val endJoin = System.currentTimeMillis()
 
     FileManager.writeRDDToFile(joined, tempDir, outputDir, outputPath)
@@ -48,6 +48,8 @@ object SMJSpark {
     
     println("\nCleaning Disk...");
     FileManager.delete(tempDir);
+    
+    sc.stop();
   }
 }
 
