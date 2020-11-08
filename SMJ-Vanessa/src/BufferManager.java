@@ -4,14 +4,14 @@ import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PageManager {
+public class BufferManager {
 	public static char NEW_LINE_SEPARATOR = '\n';
 
 	private Table table;
 	private int totalRecords;
 	private int numPages;
 
-	public PageManager(Table table) {
+	public BufferManager(Table table) {
 		this.table = table;
 		this.totalRecords = table.getNumRecords();
 		this.numPages = (totalRecords - 1) / Database.RECORDS_PER_PAGE + 1;

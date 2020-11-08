@@ -10,12 +10,12 @@ import java.util.Queue;
 
 public class SortOperator {
 	private Table table;
-	private PageManager pageManager;
+	private BufferManager bufferManager;
 	private Comparator<Record> comparator;
 
 	public SortOperator(Table table, Comparator<Record> comparator) {
 		this.table = table;
-		this.pageManager = new PageManager(this.table);
+		this.bufferManager = new BufferManager(this.table);
 		this.comparator = comparator;
 	}
 
@@ -30,29 +30,29 @@ public class SortOperator {
 	}
 
 	public void sort(String runsDir) {
-		DiskManager.createDirectory(runsDir);
-		int runsNum = (pageManager.getNumPages() - 1) / Database.NUM_BUFFERS + 1;
+		FileManager.createDirectory(runsDir);
+		int runsNum = (bufferManager.getNumPages() - 1) / Database.NUM_BUFFERS + 1;
 		for (int r = 0; r < runsNum; ++r) {
 			List<Record> buffersRecords = new ArrayList<Record>();
 			if (r == runsNum - 1) {
-				int remainingPages = pageManager.getNumPages() - (runsNum - 1) * Database.NUM_BUFFERS;
+				int remainingPages = bufferManager.getNumPages() - (runsNum - 1) * Database.NUM_BUFFERS;
 				for (int p = 0; p < remainingPages; ++p) {
-					buffersRecords.addAll(pageManager.loadPageToMemory(r * Database.NUM_BUFFERS + p));
+					buffersRecords.addAll(bufferManager.loadPageToMemory(r * Database.NUM_BUFFERS + p));
 				}
 			} else {
 				for (int p = 0; p < Database.NUM_BUFFERS; ++p) {
-					buffersRecords.addAll(pageManager.loadPageToMemory(r * Database.NUM_BUFFERS + p));
+					buffersRecords.addAll(bufferManager.loadPageToMemory(r * Database.NUM_BUFFERS + p));
 				}
 			}
 			buffersRecords.sort(comparator);
 			String filename = "run_" + r + ".csv";
-			DiskManager.writeRecordsToDisk(runsDir + "/" + filename, buffersRecords);
+			FileManager.writeRecordsToDisk(runsDir + "/" + filename, buffersRecords);
 		}
 	}
 
 	public String merge(String sortRunsDir, String mergeRunsDir) {
-		DiskManager.createDirectory(mergeRunsDir);
-		int sortRunsNum = (pageManager.getNumPages() - 1) / Database.NUM_BUFFERS + 1;
+		FileManager.createDirectory(mergeRunsDir);
+		int sortRunsNum = (bufferManager.getNumPages() - 1) / Database.NUM_BUFFERS + 1;
 		int mergeRunsNum = (int) Math.ceil(Math.log(sortRunsNum) / Math.log(Database.NUM_BUFFERS - 1));
 		int runsToMergeTotalNum = sortRunsNum;
 		int runsNum;
@@ -63,7 +63,7 @@ public class SortOperator {
 
 			// <editor-fold defaultstate="collapsed" desc=" do the merge runs ">
 			for (int i = 0; i < runsNum; i++) {
-				List<PageManager> tablesPM = new ArrayList<>();
+				List<BufferManager> tablesPM = new ArrayList<>();
 
 				int nbRunsToMerge = i == runsNum - 1 ? runsToMergeTotalNum - (runsNum - 1) * (Database.NUM_BUFFERS - 1) : Database.NUM_BUFFERS - 1;
 
@@ -98,7 +98,7 @@ public class SortOperator {
 					} else {
 						path = mergeRunsDir + "/" + "run_" + (level - 1) + "_" + (i * (Database.NUM_BUFFERS - 1) + j) + ".csv";
 					}
-					tablesPM.add(new PageManager(new Table("", path)));
+					tablesPM.add(new BufferManager(new Table("", path)));
 				}
 // </editor-fold>
 
@@ -126,7 +126,7 @@ public class SortOperator {
 					Pair<Record, Integer> nextRecord = pq.remove();
 					buffersRecords.add(nextRecord.getFirst());
 					if (buffersRecords.size() == Database.RECORDS_PER_PAGE) {
-						DiskManager.appendRecordsToDisk(outputPath, buffersRecords);
+						FileManager.appendRecordsToDisk(outputPath, buffersRecords);
 						buffersRecords.clear();
 					}
 					if (records.get(nextRecord.getSecond()).hasNext()) {
@@ -142,7 +142,7 @@ public class SortOperator {
 					}
 				}
 				if (!buffersRecords.isEmpty()) {
-					DiskManager.appendRecordsToDisk(outputPath, buffersRecords);
+					FileManager.appendRecordsToDisk(outputPath, buffersRecords);
 				}
 				// </editor-fold>
 // </editor-fold>

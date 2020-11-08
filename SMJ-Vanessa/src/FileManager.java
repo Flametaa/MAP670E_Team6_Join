@@ -9,7 +9,7 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
-public class DiskManager {
+public class FileManager {
 	public static String CSV_SEPARATOR = ",";
 	public static String NEW_LINE_SEPARATOR = "\n";
 

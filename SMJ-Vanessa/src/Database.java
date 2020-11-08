@@ -35,7 +35,7 @@ public class Database {
 		
 		System.out.println("Creating temporary directory...\n");
 		String tempDir = "temp";
-		DiskManager.createDirectory(tempDir);
+		FileManager.createDirectory(tempDir);
 		
 		System.out.println("Single-threaded Join Implementation");
 		long startTime = System.currentTimeMillis();
@@ -60,6 +60,6 @@ public class Database {
 		System.out.println("Combine duration: " + mj.duration_combine + " ms");
 		
 		System.out.println("\nCleaning Disk...");
-		DiskManager.deleteFromDisk(tempDir);
+		FileManager.deleteFromDisk(tempDir);
 	}
 }

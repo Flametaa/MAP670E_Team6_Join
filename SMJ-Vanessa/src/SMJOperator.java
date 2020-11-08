@@ -6,9 +6,9 @@ import java.util.List;
 public class SMJOperator {
 	private Table r;
 	private Table l;
-	private PageManager PageManagerR;
+	private BufferManager PageManagerR;
 	private int PageinR;
-	private PageManager PageManagerL;
+	private BufferManager PageManagerL;
 	private int PageinL;
 	private Comparator<Record> comparator = (r1, r2) -> Integer.compare(Integer.parseInt(r1.getValue(0)),
 			Integer.parseInt(r2.getValue(0)));
@@ -38,15 +38,15 @@ public class SMJOperator {
 	}
 
 	private void createPageManager() {
-		this.PageManagerR = new PageManager(r);
+		this.PageManagerR = new BufferManager(r);
 		this.PageinR = PageManagerR.getNumPages();
-		this.PageManagerL = new PageManager(l);
+		this.PageManagerL = new BufferManager(l);
 		this.PageinL = PageManagerL.getNumPages();
 	}
 
 	private void merge() {
 		if (emptyTable) {
-			DiskManager.writeRecordsToDisk(outputPath, new ArrayList<Record>());
+			FileManager.writeRecordsToDisk(outputPath, new ArrayList<Record>());
 			return;
 		}
 		List<Record> joined = new ArrayList<Record>();
@@ -110,10 +110,10 @@ public class SMJOperator {
 					count++;
 					if (count == maxRecords) {
 						if (firstWrite) {
-							DiskManager.writeRecordsToDisk(outputPath, joined);
+							FileManager.writeRecordsToDisk(outputPath, joined);
 							firstWrite = false;
 						} else {
-							DiskManager.appendRecordsToDisk(outputPath, joined);
+							FileManager.appendRecordsToDisk(outputPath, joined);
 						}
 						joined.clear();
 						count = 0;
@@ -164,9 +164,9 @@ public class SMJOperator {
 		}
 		if (!joined.isEmpty()) {
 			if (firstWrite) {
-				DiskManager.writeRecordsToDisk(outputPath, joined);
+				FileManager.writeRecordsToDisk(outputPath, joined);
 			} else {
-				DiskManager.appendRecordsToDisk(outputPath, joined);
+				FileManager.appendRecordsToDisk(outputPath, joined);
 			}
 		}
 	}

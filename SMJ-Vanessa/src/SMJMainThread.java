@@ -22,10 +22,10 @@ public class SMJMainThread {
 	public void join() {
 		File directory = new File("temp/partitions");
 		if (!directory.exists())
-			DiskManager.createDirectory(directory.getPath());
+			FileManager.createDirectory(directory.getPath());
 		directory = new File("temp/merged_partitions");
 		if (!directory.exists())
-			DiskManager.createDirectory(directory.getPath());
+			FileManager.createDirectory(directory.getPath());
 
 		long start_time;
 		start_time = System.currentTimeMillis();
@@ -53,7 +53,7 @@ public class SMJMainThread {
 		duration_threads = System.currentTimeMillis() - start_time;
 
 		start_time = System.currentTimeMillis();
-		DiskManager.mergePartitionsOnDisk("temp/merged_partitions/", output_path, nb_threads);
+		FileManager.mergePartitionsOnDisk("temp/merged_partitions/", output_path, nb_threads);
 		duration_combine = System.currentTimeMillis() - start_time;
 	}
 
@@ -99,6 +99,6 @@ public class SMJMainThread {
 
 	private void partition(Table table, Integer[] boundaries, JoinSide side) {
 		String str = side == JoinSide.R ? "temp/partitions/r_" : "temp/partitions/s_";
-		DiskManager.splitPartitionsOnDisk(table.getFilename(), str, nb_threads, boundaries);
+		FileManager.splitPartitionsOnDisk(table.getFilename(), str, nb_threads, boundaries);
 	}
 }
