@@ -2,9 +2,7 @@
 
 This folder or branch contains our implementations of the **Nested Loop Join(simple NLJ) and Block Nested Loop Join algorithm(BNLJ)**. 
 
-> All data is found in the data folder named **database_created** which contains five files(these files contains only **int records** R1,R2,R3,R4,R5)and 2 files (autrhors and posts which contain **strings records or values**) in format .csv .
-> All the code is found in the **src/project**. It contains the single-threaded implementation about NLJ and BNLJ.
->
+ All data is found in the data folder named **database_created** which contains five files(these files contains only **int records** R1,R2,R3,R4,R5)and 2 files (autrhors and posts which contain **strings records or values**) in format .csv .All the code is found in the **src/project**. It contains the single-threaded implementation about NLJ and BNLJ.
 
 ## A. Description of Structure:
 
@@ -39,10 +37,11 @@ This class was created to contain methods on the use of tuples or lines in our c
 This class also contains the tuple join method which allows to update the values in the output join relationship using the classic join or equi-join to perform operations in NLJ and BNLJ.
 
 ### 5.NLJ:
- It contains the implementation of the Simple Nested Loop Join. For the realization of this implementation we have as a starting point the readings of the websites:
--http://web.cs.ucla.edu/classes/fall14/cs143/notes/join
--https://www.geeksforgeeks.org/join-algorithms-in-database/#:~:text=There%20are%20two%20algorithms%20to,and%20occupies%20BR%20blocks.
--https://www.sciencedirect.com/science/article/pii/S0022000014001536
+ It contains the implementation of the Simple Nested Loop Join. For the realization of this implementation we have as a starting point 
+ the readings of the websites:
+- http://web.cs.ucla.edu/classes/fall14/cs143/notes/join
+- https://www.geeksforgeeks.org/join-algorithms-in-database/#:~:text=There%20are%20two%20algorithms%20to,and%20occupies%20BR%20blocks.
+- https://www.sciencedirect.com/science/article/pii/S0022000014001536
 
 ### 6.BNLJ:
  It contains the implementation of the Block Nested Loop Join (BNLJ) algorithm. 
