@@ -6,7 +6,7 @@ This folder or branch contains our implementations of the **Nested Loop Join(sim
 
 ## A. Description of Structure:
 
-> To achieve our final goal this implementation was divided in the following sections or class:
+To achieve our final goal this implementation was divided in the following sections or class:
 
 ### 1. Class Main.java:
 Using Main.java would allow both implementations to run on existing data sets in .csv format. It would return the result as .csv results or the filename the user specified. To run the ''main'' class it is necessary to enter the inputs or arguments in the format of a list of strings in the following format:
