@@ -2,7 +2,7 @@ package project;
 /**
  * 
  * This class allows to obtain the attributes such that :
- * Name of relations and the values(records) of each relation
+ * Name of columns of relations and the values(records) in  the column specified in each relation 
  *
  */
 public class Relation_Attribute {
