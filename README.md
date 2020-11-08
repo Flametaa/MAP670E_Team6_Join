@@ -2,7 +2,7 @@
 
 This folder or branch contains our implementations of the **Nested Loop Join(simple NLJ) and Block Nested Loop Join algorithm(BNLJ)**. 
 
- All data is found in the data folder named **database_created** which contains five files(these files contains only **int records** R1,R2,R3,R4,R5)and 2 files (autrhors and posts which contain **strings records or values**) in format .csv .All the code is found in the **src/project**. It contains the single-threaded implementation about NLJ and BNLJ.
+ All data is found in the data folder named **database_created** which contains five files(these files contains only **int records** R1,R2,R3,R4,R5)and 2 files (autrhors and posts which contain **strings records or values**) in format .csv .All the code is found in the **src/project**. It contains the single-threaded implementation about NLJ and BNLJ.In the results.csv we can find the join output between the relations authors and posts.
 
 ## A. Description of Structure:
 
