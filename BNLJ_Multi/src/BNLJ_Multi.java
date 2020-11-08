@@ -7,18 +7,18 @@ import java.util.concurrent.TimeUnit;
 public class BNLJ_Multi {
     public static void main(String[] args) throws Exception {
         /* Format of 'args' : outerTableFile c1 innerTableFile c2 numberWorkers numTupleByBlock bufferSize joinTableFile */
-        /* Ex of 'args'     : data/posts.csv 0 data/authors.csv 0 4 200 8132 data/results.csv */
+        /* Ex of 'args'     : data/purchases_heavy.csv 0 data/clients_heavy.csv 0 4 200 8132 data/results.csv */
 		
         /*  Tables Files */
-        String outerTableFile               = "./data/posts.csv";
-        String innerTableFile               = "./data/authors.csv";
-        String joinTableFile                = "./data/results2.csv";
+        String outerTableFile               = "./data/purchases_heavy.csv";
+        String innerTableFile               = "./data/clients_heavy.csv";
+        String joinTableFile                = "./data/results5.csv";
 
         /** Config Variables   **/
         BufferedReader bufferOuterRelation  = null;
         BufferedWriter bufferJoinRelation   = null;
         Block outerBlock                    = null;
-        int numberWorkers                   = 8;
+        int numberWorkers                   = 4;
         int numTupleByBlock                 = 200; 
         int bufferSize                      = 8*1024;
         int c1                              = 0;
@@ -46,7 +46,7 @@ public class BNLJ_Multi {
         
         // Create the Buffers
         bufferOuterRelation     = new BufferedReader(new FileReader(outerTableFile),bufferSize);
-        bufferJoinRelation      = new BufferedWriter(new FileWriter(joinTableFile),bufferSize);
+        bufferJoinRelation      = new BufferedWriter(new FileWriter(joinTableFile));
 
         // Create the Block for the outer relation
         outerBlock              = new Block(bufferOuterRelation, numTupleByBlock );

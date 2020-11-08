@@ -48,7 +48,7 @@ public class Workers extends Thread {
             // Nested Loop Join Algorithm
             while(innerTuple.getNumFields()!=0){
                 for (Tuple outerTuple : outerTuples){
-                    JoinOperation.exec(outerTuple,innerTuple,bufferJoinRelation,1,c1,c2);
+                    JoinOperation.exec(outerTuple,innerTuple,bufferJoinRelation,2,c1,c2);
                 }
                 
                 // Take next tuple of inner Relation
