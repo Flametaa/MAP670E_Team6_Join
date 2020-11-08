@@ -29,6 +29,8 @@ public class DiskManager {
 			for (File c : file.listFiles()) {
 				deleteFromDisk(c.getPath());
 			}
+		} else {
+			System.gc();
 		}
 		file.delete();
 	}

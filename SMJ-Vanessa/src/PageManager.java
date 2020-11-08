@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PageManager {
-	public static int RECORDS_PER_PAGE = 40000;
 	public static char NEW_LINE_SEPARATOR = '\n';
 
 	private Table table;
@@ -15,7 +14,7 @@ public class PageManager {
 	public PageManager(Table table) {
 		this.table = table;
 		this.totalRecords = table.getNumRecords();
-		this.numPages = (totalRecords - 1) / RECORDS_PER_PAGE + 1;
+		this.numPages = (totalRecords - 1) / Database.RECORDS_PER_PAGE + 1;
 	}
 
 	public List<Record> loadPageToMemory(int p) {
@@ -25,12 +24,12 @@ public class PageManager {
 		try {
 			RandomAccessFile raf = new RandomAccessFile(table.getFilename(), "r");
 			FileChannel fc = raf.getChannel();
-			int start = recordsOffset.get(p * RECORDS_PER_PAGE);
+			int start = recordsOffset.get(p * Database.RECORDS_PER_PAGE);
 			int end;
 			if (p == numPages - 1) {
 				end = recordsOffset.get(totalRecords - 1) + recordsLength.get(totalRecords - 1);
 			} else {
-				end = recordsOffset.get((p + 1) * RECORDS_PER_PAGE) - 1;
+				end = recordsOffset.get((p + 1) * Database.RECORDS_PER_PAGE) - 1;
 			}
 			MappedByteBuffer buffer = fc.map(FileChannel.MapMode.READ_ONLY, start, end - start);
 			String line = "";

@@ -57,7 +57,7 @@ public class SMJOperator {
 		boolean lock = true;
 		boolean firstWrite = true;
 		int count = 0;
-		int maxRecords = PageManager.RECORDS_PER_PAGE*SortOperator.NUM_BUFFERS;
+		int maxRecords = Database.RECORDS_PER_PAGE * Database.NUM_BUFFERS;
 		List<Record> PageR = PageManagerR.loadPageToMemory(right);
 		for (int x = 0; x < this.PageinL; x++) // Looping over all the left pages starting from zero
 		{
