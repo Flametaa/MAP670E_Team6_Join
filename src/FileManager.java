@@ -47,7 +47,7 @@ public class FileManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        this.resultBuffer = new BufferedWriter(fw, 16 * 1024);
+        this.resultBuffer = new BufferedWriter(fw);
 
 
     }
@@ -55,7 +55,18 @@ public class FileManager {
     public void writeOnFile(String text){
         try {
             resultBuffer.write(text);
-            //resultBuffer.flush();
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+    public void flushBuffer(){
+        try {
+            resultBuffer.flush();
+
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -63,6 +74,7 @@ public class FileManager {
     }
     public void closeFile(){
         try {
+            resultBuffer.flush();
             resultBuffer.close();
         } catch (IOException e) {
 
@@ -71,8 +83,14 @@ public class FileManager {
     }
 
     public void deleteFile(){
-        file.delete();
+        Path pa = Paths.get(this.path);
 
+        try {
+            Files.delete(pa);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
