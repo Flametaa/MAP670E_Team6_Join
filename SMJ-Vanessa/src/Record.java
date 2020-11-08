@@ -1,5 +1,5 @@
 public class Record {
-	protected String[] values;
+	private String[] values;
 
 	public Record(String[] values) {
 		this.values = values;

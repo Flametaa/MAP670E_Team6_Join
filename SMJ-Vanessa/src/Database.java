@@ -1,7 +1,5 @@
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Database {
 	String fileDir;
@@ -24,30 +22,36 @@ public class Database {
 
 	public static void main(String[] args) {
 		Database d = new Database("database");
-		Table t1 = d.addTable("clients_heavy", "clients_heavy.csv");
-		Table t2 = d.addTable("purchases_heavy", "purchases_heavy.csv");
+		Table t1 = d.addTable("clients", "clients_heavy.csv");
+		Table t2 = d.addTable("purchases", "purchases_heavy.csv");
+		
+		System.out.println("Creating temporary directory...\n");
+		String tempDir = "temp";
+		DiskManager.createDirectory(tempDir);
+		
 		System.out.println("Single-threaded Join Implementation");
 		long startTime = System.currentTimeMillis();
-		SortMergeJoin j = new SortMergeJoin(t1, t2);
-		j.join("database/joined.csv");
+		SMJOperator j = new SMJOperator(t1, t2, "database/joined.csv");
+		j.join();
 		long endTime = System.currentTimeMillis();
 		long duration = endTime - startTime;
-		System.out.println("Total Duration: " + duration + " ms\n");
+		System.out.println("Total Duration: " + duration + " ms");
+		System.out.println("Sort Duration: " + j.durationSort + " ms");
+		System.out.println("Merge Duration: " + j.durationMerge + " ms\n");
+		
 
 		System.out.println("Multi-threaded Join Implementation");
 		long startTime0 = System.currentTimeMillis();
-		SortMergeJoinThreadMain j0 = new SortMergeJoinThreadMain(t1, t2, 2, "database/joined_thread.csv");
-		j0.start();
-		try {
-			j0.join();
-		} catch (InterruptedException ex) {
-			Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
-		}
+		SMJMainThread j0 = new SMJMainThread(t1, t2, 4, "database/joined_thread.csv");
+		j0.join();
 		long endTime0 = System.currentTimeMillis();
 		long duration0 = endTime0 - startTime0;
 		System.out.println("Total duration: " + duration0 + " ms");
 		System.out.println("Partitioning duration: " + j0.duration_partition + " ms");
 		System.out.println("Threads duration: " + j0.duration_threads + " ms");
 		System.out.println("Combine duration: " + j0.duration_combine + " ms");
+		
+		System.out.println("\nCleaning Disk...");
+		DiskManager.deleteFromDisk(tempDir);
 	}
 }

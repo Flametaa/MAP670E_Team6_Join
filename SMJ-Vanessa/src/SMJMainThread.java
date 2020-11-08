@@ -1,5 +1,4 @@
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -7,45 +6,39 @@ import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class SortMergeJoinThreadMain extends Thread {
+public class SMJMainThread {
 	Table table_r, table_s;
 	int nb_threads;
 	String output_path;
 	long duration_partition, duration_threads, duration_combine;
 
-	public SortMergeJoinThreadMain(Table t1, Table t2, int nbThreads, String filename) {
+	public SMJMainThread(Table t1, Table t2, int nbThreads, String filename) {
 		this.table_r = t1;
 		this.table_s = t2;
 		this.nb_threads = nbThreads;
 		this.output_path = filename;
 	}
 
-	@Override
-	public void run() {
-		File directory = new File("database/partitions");
+	public void join() {
+		File directory = new File("temp/partitions");
 		if (!directory.exists())
 			DiskManager.createDirectory(directory.getPath());
-		directory = new File("database/merged_partitions");
+		directory = new File("temp/merged_partitions");
 		if (!directory.exists())
 			DiskManager.createDirectory(directory.getPath());
 
 		long start_time;
-		try {
-			start_time = System.currentTimeMillis();
-			createPartitions();
-			duration_partition = System.currentTimeMillis() - start_time;
-		} catch (IOException ex) {
-			Logger.getLogger(SortMergeJoinThreadMain.class.getName()).log(Level.SEVERE, null, ex);
-			return;
-		}
+		start_time = System.currentTimeMillis();
+		createPartitions();
+		duration_partition = System.currentTimeMillis() - start_time;
 
 		start_time = System.currentTimeMillis();
 		List<Thread> threads = new ArrayList<>();
 		for (int i = 0; i < nb_threads; i++) {
-			Table r = new Table("r_" + Integer.toString(i), "database/partitions/r_" + Integer.toString(i) + ".csv");
-			Table s = new Table("s_" + Integer.toString(i), "database/partitions/s_" + Integer.toString(i) + ".csv");
+			Table r = new Table("r_" + Integer.toString(i), "temp/partitions/r_" + Integer.toString(i) + ".csv");
+			Table s = new Table("s_" + Integer.toString(i), "temp/partitions/s_" + Integer.toString(i) + ".csv");
 			Thread thread = new Thread(
-					new SortMergeJoinThread(r, s, "database/merged_partitions/" + Integer.toString(i) + ".csv"));
+						new SMJThread(r, s, "temp/merged_partitions/" + Integer.toString(i) + ".csv"));
 			thread.start();
 			threads.add(thread);
 		}
@@ -53,26 +46,18 @@ public class SortMergeJoinThreadMain extends Thread {
 			try {
 				thread.join();
 			} catch (InterruptedException ex) {
-				Logger.getLogger(SortMergeJoinThreadMain.class.getName()).log(Level.SEVERE, null, ex);
+				Logger.getLogger(SMJMainThread.class.getName()).log(Level.SEVERE, null, ex);
 			}
 		});
-
-		for (int i = 0; i < nb_threads; i++) {
-			DiskManager.deleteFromDisk("database/sorted_tables/sorted_r_" + Integer.toString(i) + ".csv");
-			DiskManager.deleteFromDisk("database/sorted_tables/sorted_s_" + Integer.toString(i) + ".csv");
-		}
 
 		duration_threads = System.currentTimeMillis() - start_time;
 
 		start_time = System.currentTimeMillis();
-		DiskManager.mergePartitionsOnDisk("database/merged_partitions/", output_path, nb_threads);
+		DiskManager.mergePartitionsOnDisk("temp/merged_partitions/", output_path, nb_threads);
 		duration_combine = System.currentTimeMillis() - start_time;
-
-		DiskManager.deleteFromDisk("database/partitions");
-		DiskManager.deleteFromDisk("database/merged_partitions");
 	}
 
-	private void createPartitions() throws IOException {
+	private void createPartitions() {
 		TreeMap<Integer, Integer> histo_r = getExactHistogram(table_r);
 		Integer[] boundaries = getBoundaries(table_r, histo_r, nb_threads);
 		partition(table_r, boundaries, JoinSide.R);
@@ -113,7 +98,7 @@ public class SortMergeJoinThreadMain extends Thread {
 	}
 
 	private void partition(Table table, Integer[] boundaries, JoinSide side) {
-		String str = side == JoinSide.R ? "database/partitions/r_" : "database/partitions/s_";
+		String str = side == JoinSide.R ? "temp/partitions/r_" : "temp/partitions/s_";
 		DiskManager.splitPartitionsOnDisk(table.getFilename(), str, nb_threads, boundaries);
 	}
 }

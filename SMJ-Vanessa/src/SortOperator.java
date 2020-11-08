@@ -9,7 +9,7 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 
 public class SortOperator {
-	public static int NUM_BUFFERS = 3;
+	public static int NUM_BUFFERS = 5;
 
 	private Table table;
 	private PageManager pageManager;
@@ -26,12 +26,9 @@ public class SortOperator {
 		String result = merge(runsDir + "/" + table.getTablename(), mergeRunsDir + "/" + table.getTablename());
 		try {
 			Files.move(Paths.get(result), Paths.get(outputPath), StandardCopyOption.REPLACE_EXISTING);
-			DiskManager.deleteFromDisk(runsDir);
-			DiskManager.deleteFromDisk(mergeRunsDir);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	public void sort(String runsDir) {

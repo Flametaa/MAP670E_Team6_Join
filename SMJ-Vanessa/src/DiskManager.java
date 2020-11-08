@@ -30,37 +30,34 @@ public class DiskManager {
 				deleteFromDisk(c.getPath());
 			}
 		}
-		System.gc();
 		file.delete();
 	}
 
 	public static void writeRecordsToDisk(String filename, List<Record> records) {
-		FileWriter fileWriter = null;
+		BufferedWriter bufferedWriter = null;
 		try {
-			fileWriter = new FileWriter(filename);
+			bufferedWriter = new BufferedWriter(new FileWriter(filename));
 			for (Record r : records) {
 				String line = String.join(CSV_SEPARATOR, r.getValues());
-				fileWriter.append(line);
-				fileWriter.append(NEW_LINE_SEPARATOR);
+				bufferedWriter.write(line);
+				bufferedWriter.write(NEW_LINE_SEPARATOR);
 			}
-			fileWriter.flush();
-			fileWriter.close();
+			bufferedWriter.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	public static void appendRecordsToDisk(String filename, List<Record> records) {
-		FileWriter fileWriter = null;
+		BufferedWriter bufferedWriter = null;
 		try {
-			fileWriter = new FileWriter(filename, true);
+			bufferedWriter = new BufferedWriter(new FileWriter(filename, true));
 			for (Record r : records) {
 				String line = String.join(CSV_SEPARATOR, r.getValues());
-				fileWriter.append(line);
-				fileWriter.append(NEW_LINE_SEPARATOR);
+				bufferedWriter.write(line);
+				bufferedWriter.write(NEW_LINE_SEPARATOR);
 			}
-			fileWriter.flush();
-			fileWriter.close();
+			bufferedWriter.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -81,10 +78,9 @@ public class DiskManager {
 					bin = -(bin + 1);
 
 				writers[bin].write(line);
-				writers[bin].write("\n");
+				writers[bin].write(NEW_LINE_SEPARATOR);
 			}
 			for (int i = 0; i < numPartitions; i++) {
-				writers[i].flush();
 				writers[i].close();
 			}
 		} catch (Exception e) {
@@ -104,7 +100,6 @@ public class DiskManager {
 					}
 				}
 			}
-			writer.flush();
 			writer.close();
 		} catch (Exception e) {
 			e.printStackTrace();
