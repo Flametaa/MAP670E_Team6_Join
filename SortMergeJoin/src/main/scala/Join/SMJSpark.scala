@@ -21,34 +21,28 @@ object SMJSpark {
     if (!Files.exists(Paths.get(outputDir))) Files.createDirectory(Paths.get(outputDir))
     
     val outputPath = "results/joined.csv"
-
-    val start = System.currentTimeMillis()
+    
+    val start = System.currentTimeMillis()   
 
     val t1 = sc.textFile(inputPath1)
                .map(line => line.split(","))
                .map(record => (record(0).toInt, record))
     val t2 = sc.textFile(inputPath2)
                .map(line => line.split(","))
-               .map(record => (record(0).toInt, record))
-
+               .map(record => (record(0).toInt, record))        
+     
     val smj = new SortMergeJoin(t1, t2)
     val joined = smj.join("Hash", 5)
     
-    val endJoin = System.currentTimeMillis()
-
     FileManager.writeRDDToFile(joined, tempDir, outputDir, outputPath)
     val end = System.currentTimeMillis()
 
-    val joinDuration = endJoin - start;
     val totalDuration = end - start;
     
     println(joined.count() + " records")
-    println("Sort-Merge Join Duration: " + joinDuration + " ms")
     println("Total Duration: " + totalDuration + " ms")
     
-    println("\nCleaning Disk...");
     FileManager.delete(tempDir);
-    
     sc.stop();
   }
 }
