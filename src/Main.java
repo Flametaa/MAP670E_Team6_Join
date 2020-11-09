@@ -42,6 +42,15 @@ public class Main {
         long stopTime = System.nanoTime();
         System.out.println("The total single-threaded execution time is :"+(stopTime-startTime)/1e9+" seconds\n");
 
+        System.out.println("------ Starting single-threaded Grace Join using Extendible Hash ------\n");
+        //Benchmarking execution time
+        startTime = System.nanoTime();
+        GraceEHash graceEHash = new GraceEHash(rName, sName, dataPath, rKey, sKey, n, outputFile);
+        graceEHash.graceJoinEHash();
+
+
+        stopTime = System.nanoTime();
+        System.out.println("The total single-threaded execution time is :"+(stopTime-startTime)/1e9+" seconds\n");
 
         //Multi-threaded Grace Join
         System.out.println("------Starting multi-threaded Grace Join------\n");

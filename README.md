@@ -28,6 +28,33 @@ If you wish to join different data sets, a few parameters will have to change in
         *Note: **n** is fixed by the user in the [Main.java](/src/Main.java)*
         - Iterates on each pair and calls the [HashJoin.java](src/HashJoin.java), the problem of joining two large tables is divided into m partial joins performed by a simple Hash Join each.
 
+**Implementation details**
+
+**How to chose the number of partitions **n**?**
+
+The choice of n seemed critical. It depends not only on the size of the dataset, but also on the it’s distribution and on the hash function used. Up until now, this parameter was hyper tuned and what works for one dataset may obviously not work for another. We wanted this to be automatically calculated and adapted to each table. 
+
+We also wanted to make this implementation an out of the box code where the user doesn’t have to specify any more parameters than the names of the dataset and the join keys. 
+
+So we opted for extendible hashing. Up until now, we’ve been using static hash to split the data into n partitions.
+
+Extendible hashing is a dynamic hashing method wherein directories, and buckets are used to hash data. It is an aggressively flexible method in which the hash function also experiences dynamic changes. The idea is that we start with a number n, and gradually increase it as we scan the datasets using directories on top of buckets.
+
+-  **<ins>Directories</ins>**: The buckets are used to hash the actual data
+
+-  **<ins>Buckets</ins>**: The directories store the addresses of these buckets, i.e, they point to the buckets. They have an id that may change when an expansion takes place. 
+
+-  **<ins>Global depth</ins>**: Directories have a Global depth associated with them which denotes the number of least significant bits to consider to categorize the keys.  In total we have 2 ^ globalDepth directories.
+
+-  **<ins>Local depth</ins>**: It is associated with buckets and denotes the same thing as, and always less or equal to the global depth. Together these determine the action to be performed when an overflow happens.
+
+-  **<ins>Bucket splitting</ins>**: When a bucket overflows, it is split in two.
+
+-  **<ins>Directories expansion</ins>**: When the local depth of the overflowing bucket is equal to the global depth, directory expansion occurs. 
+
+The class responsible for this is the [EHash.java](src/EHash.java) class. [GraceEHash.java](src/GraceEHash.java) does the same thing as [GraceJoin.java](src/GraceJoin.java) only using extendible hash. When implementing this, we’ve seen performance improvement when it comes to joining the partitions, as the data is better distributed between the partitions. However it only compensates for the extra time it took to actually partition the data, as now that task is a little bit more complicated.
+
+
 - Multi-thread implementation
 
     There are two things we can parallelize in this algorithm: The partitioning, and the joining. 
