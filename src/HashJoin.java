@@ -1,11 +1,11 @@
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Arrays;
 import java.io.IOException;
+import java.util.stream.Collectors;
 
 public class HashJoin{
     //This is the simple Hash Join single thread implementation.
@@ -37,7 +37,8 @@ public class HashJoin{
 
         this.file = file;
     }
-    public HashJoin(String rPath, String sPath, int rKey, int sKey, FileManager file){
+	
+	public HashJoin(String rPath, String sPath, int rKey, int sKey, FileManager file){
         //To avoid having another pass on both the datasets,
         //we assume here that their size is known, which will be the case in our Grace Join
         //For the sake of coherence, let R be the smallest dataset
@@ -77,7 +78,8 @@ public class HashJoin{
         try (BufferedReader br = Files.newBufferedReader(Paths.get(sPath))){
             String sRow;
             while ((sRow = br.readLine()) != null){
-                String key = sRow.split(",")[sKey];
+                String[] sRowArray = sRow.split(",") ;
+                String key = sRowArray[sKey];
 
                 //rRow contains the mapping to key if it exists and if key = k
                 //otherwise, is null
@@ -85,10 +87,7 @@ public class HashJoin{
                 if (rRow != null){
 
                     //Remove the duplicate key column before writing
-                    String[] sRowArray = sRow.split(",") ;
-                    sRowArray = Arrays.stream(sRowArray).filter(s -> !s.equals(key)).toArray(String[]::new);
-                    sRow = String.join(",", sRowArray);
-
+                    sRow = Arrays.stream(sRowArray).filter(s -> !s.equals(key)).collect(Collectors.joining(","));
                     file.writeOnFile(rRow + "," + sRow + "\n");
 
                 }
